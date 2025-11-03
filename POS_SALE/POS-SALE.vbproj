@@ -1,0 +1,846 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A0E05388-BF22-42C3-8A73-065884C69169}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>StrindbergNet.My.MyApplication</StartupObject>
+    <RootNamespace>StrindbergNet</RootNamespace>
+    <AssemblyName>POS-SALE</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <!-- URLs de publicación - AJUSTAR SEGÚN TU ENTORNO -->
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <!-- <InstallUrl>http://192.168.1.171/possale/</InstallUrl> -->
+    <!-- <UpdateUrl>http://192.168.1.171/possale/</UpdateUrl> -->
+    <ProductName>POS-SALE</ProductName>
+    <MinimumRequiredVersion>1.0.0.55</MinimumRequiredVersion>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>130</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>true</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>POS-SALE.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>POS-SALE.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>674956DD3333B58A84399A71D45388E8FEC41681</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>POS-SALE_1_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>Custom</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>cashier_machine_cash_register_pos_icon_225168.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- MySQL.Data ELIMINADA - Migrado a SQLite -->
+    <!--
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 6.10.7\Assemblies\v4.5.2\MySql.Data.dll</HintPath>
+    </Reference>
+    -->
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <!-- TouchscreenKeyboard - Ruta corregida -->
+    <Reference Include="TouchscreenKeyboard">
+      <HintPath>bin\Release\TouchscreenKeyboard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Asincronica.vb" />
+    <Compile Include="DBCONECTAR1.vb" />
+
+    <!-- ========== MÓDULO PANELADMIN - EXCLUIDO TEMPORALMENTE (No migrado a SQLite) ========== -->
+    <!--
+    <Compile Include="paneladmin\AdminCatProd.Designer.vb">
+      <DependentUpon>AdminCatProd.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\AdminCatProd.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\adminproductos.Designer.vb">
+      <DependentUpon>adminproductos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\adminproductos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\AtribCompo.Designer.vb">
+      <DependentUpon>AtribCompo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\AtribCompo.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\Composicion.Designer.vb">
+      <DependentUpon>Composicion.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\Composicion.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    -->
+    <!-- DBconectar.vb OBSOLETO - Renombrado a .OLD (MySQL Legacy) -->
+    <!-- <Compile Include="DBconectar.vb" /> -->
+    <!--
+    <Compile Include="paneladmin\FavoritosEmp.Designer.vb">
+      <DependentUpon>FavoritosEmp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\FavoritosEmp.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\FavoritosPedidos.Designer.vb">
+      <DependentUpon>FavoritosPedidos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\FavoritosPedidos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\Favoritos.Designer.vb">
+      <DependentUpon>Favoritos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\Favoritos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\DptoSeccion.Designer.vb">
+      <DependentUpon>DptoSeccion.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\DptoSeccion.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\Compo.Designer.vb">
+      <DependentUpon>Compo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\Compo.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\Conf.Designer.vb">
+      <DependentUpon>Conf.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\Conf.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    -->
+    <!-- ========== FIN MÓDULO PANELADMIN ========== -->
+
+    <Compile Include="Imprime.vb" />
+
+    <!-- MÓDULOS PedidoLocales OMITIDOS - No migrados a SQLite (baja prioridad) -->
+    <!--
+    <Compile Include="PedidoLocales\Consolidado.Designer.vb">
+      <DependentUpon>Consolidado.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PedidoLocales\Consolidado.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PedidoLocales\AgregarProductos.Designer.vb">
+      <DependentUpon>AgregarProductos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PedidoLocales\AgregarProductos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PedidoLocales\Despacho.Designer.vb">
+      <DependentUpon>Despacho.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PedidoLocales\Despacho.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PedidoLocales\MenuSemana.Designer.vb">
+      <DependentUpon>MenuSemana.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PedidoLocales\MenuSemana.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PedidoLocales\SaldoCamaras.Designer.vb">
+      <DependentUpon>SaldoCamaras.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PedidoLocales\SaldoCamaras.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    -->
+
+    <Compile Include="restaurante\Mesas.Designer.vb">
+      <DependentUpon>Mesas.vb</DependentUpon>
+    </Compile>
+    <Compile Include="restaurante\Mesas.vb">
+      <SubType>Form</SubType>
+    </Compile>
+
+    <!--
+    <Compile Include="PedidoLocales\AdminPedidoLocales.Designer.vb">
+      <DependentUpon>AdminPedidoLocales.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PedidoLocales\AdminPedidoLocales.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PedidoLocales\SelecSucu.Designer.vb">
+      <DependentUpon>SelecSucu.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PedidoLocales\SelecSucu.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PedidoLocales\PedidoLocales.Designer.vb">
+      <DependentUpon>PedidoLocales.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PedidoLocales\PedidoLocales.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    -->
+    <!-- FIN MÓDULOS PedidoLocales OMITIDOS -->
+
+    <!-- Stock.vb incluido - necesario para control de inventario en ventas -->
+    <Compile Include="PedidoLocales\Stock.vb" />
+
+    <Compile Include="pedlocfecha.Designer.vb">
+      <DependentUpon>pedlocfecha.vb</DependentUpon>
+    </Compile>
+    <Compile Include="pedlocfecha.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock\CargaStock.Designer.vb">
+      <DependentUpon>CargaStock.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Stock\CargaStock.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="varglobales.vb" />
+    <Compile Include="sinred.Designer.vb">
+      <DependentUpon>sinred.vb</DependentUpon>
+    </Compile>
+    <Compile Include="sinred.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\NuevoProd.Designer.vb">
+      <DependentUpon>NuevoProd.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\NuevoProd.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\PreciosNEW.Designer.vb">
+      <DependentUpon>PreciosNEW.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\PreciosNEW.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Print.Designer.vb">
+      <DependentUpon>Print.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Print.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Principal.Designer.vb">
+      <DependentUpon>Principal.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Principal.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="paneladmin\Productos.Designer.vb">
+      <DependentUpon>Productos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\Productos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="login.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="login.Designer.vb">
+      <DependentUpon>login.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="VentaDirecta\AdmPreciosPlu.Designer.vb">
+      <DependentUpon>AdmPreciosPlu.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\AdmPreciosPlu.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\AnulaBoleta.designer.vb">
+      <DependentUpon>AnulaBoleta.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\AnulaBoleta.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\AnulaDoc.designer.vb">
+      <DependentUpon>AnulaDoc.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\AnulaDoc.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\arqueo.Designer.vb">
+      <DependentUpon>arqueo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\arqueo.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\Auditoria.Designer.vb">
+      <DependentUpon>Auditoria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\Auditoria.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\Clientes.Designer.vb">
+      <DependentUpon>Clientes.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\Clientes.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\Varios.Designer.vb">
+      <DependentUpon>Varios.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\Varios.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\Creditos.Designer.vb">
+      <DependentUpon>Creditos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\Creditos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\Helpers.Designer.vb">
+      <DependentUpon>Helpers.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\Helpers.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\MotivosAnula.Designer.vb">
+      <DependentUpon>MotivosAnula.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\MotivosAnula.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\PagoTotal.Designer.vb">
+      <DependentUpon>PagoTotal.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\PagoTotal.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\ResumenArqueoSinCerrar.Designer.vb">
+      <DependentUpon>ResumenArqueoSinCerrar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\ResumenArqueoSinCerrar.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\VDirecta.Designer.vb">
+      <DependentUpon>VDirecta.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\VDirecta.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VentaDirecta\vta_panel.Designer.vb">
+      <DependentUpon>vta_panel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VentaDirecta\vta_panel.vb">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\licenses.licx" />
+    <EmbeddedResource Include="paneladmin\AdminCatProd.resx">
+      <DependentUpon>AdminCatProd.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\adminproductos.resx">
+      <DependentUpon>adminproductos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\AtribCompo.resx">
+      <DependentUpon>AtribCompo.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\compo.resx">
+      <DependentUpon>Compo.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\Composicion.resx">
+      <DependentUpon>Composicion.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\FavoritosEmp.resx">
+      <DependentUpon>FavoritosEmp.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\FavoritosPedidos.resx">
+      <DependentUpon>FavoritosPedidos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\Favoritos.resx">
+      <DependentUpon>Favoritos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\DptoSeccion.resx">
+      <DependentUpon>DptoSeccion.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\Conf.resx">
+      <DependentUpon>Conf.vb</DependentUpon>
+    </EmbeddedResource>
+
+    <!-- RECURSOS PedidoLocales OMITIDOS - No migrados a SQLite (baja prioridad) -->
+    <!--
+    <EmbeddedResource Include="PedidoLocales\Consolidado.resx">
+      <DependentUpon>Consolidado.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PedidoLocales\AgregarProductos.resx">
+      <DependentUpon>AgregarProductos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PedidoLocales\Despacho.resx">
+      <DependentUpon>Despacho.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PedidoLocales\MenuSemana.resx">
+      <DependentUpon>MenuSemana.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PedidoLocales\SaldoCamaras.resx">
+      <DependentUpon>SaldoCamaras.vb</DependentUpon>
+    </EmbeddedResource>
+    -->
+
+    <EmbeddedResource Include="restaurante\Mesas.resx">
+      <DependentUpon>Mesas.vb</DependentUpon>
+    </EmbeddedResource>
+
+    <!--
+    <EmbeddedResource Include="PedidoLocales\AdminPedidoLocales.resx">
+      <DependentUpon>AdminPedidoLocales.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PedidoLocales\SelecSucu.resx">
+      <DependentUpon>SelecSucu.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PedidoLocales\PedidoLocales.resx">
+      <DependentUpon>PedidoLocales.vb</DependentUpon>
+    </EmbeddedResource>
+    -->
+    <!-- FIN RECURSOS PedidoLocales OMITIDOS -->
+
+    <EmbeddedResource Include="pedlocfecha.resx">
+      <DependentUpon>pedlocfecha.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="sinred.resx">
+      <DependentUpon>sinred.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\NuevoProd.resx">
+      <DependentUpon>NuevoProd.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\PreciosNEW.resx">
+      <DependentUpon>PreciosNEW.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Print.resx">
+      <DependentUpon>Print.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Principal.resx">
+      <DependentUpon>Principal.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="paneladmin\Productos.resx">
+      <DependentUpon>Productos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ped_det.rdlc" />
+    <EmbeddedResource Include="login.resx">
+      <DependentUpon>login.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock\CargaStock.resx">
+      <DependentUpon>CargaStock.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\AdmPreciosPlu.resx">
+      <DependentUpon>AdmPreciosPlu.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\AnulaBoleta.resx">
+      <DependentUpon>AnulaBoleta.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\AnulaDoc.resx">
+      <DependentUpon>AnulaDoc.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\arqueo.resx">
+      <DependentUpon>arqueo.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\Auditoria.resx">
+      <DependentUpon>Auditoria.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\Clientes.resx">
+      <DependentUpon>Clientes.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\Varios.resx">
+      <DependentUpon>Varios.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\Creditos.resx">
+      <DependentUpon>Creditos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\Helpers.resx">
+      <DependentUpon>Helpers.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\MotivosAnula.resx">
+      <DependentUpon>MotivosAnula.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\PagoTotal.resx">
+      <DependentUpon>PagoTotal.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\ResumenArqueoSinCerrar.resx">
+      <DependentUpon>ResumenArqueoSinCerrar.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\VDirecta.resx">
+      <DependentUpon>VDirecta.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VentaDirecta\vta_panel.resx">
+      <DependentUpon>vta_panel.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="POS-SALE_1_TemporaryKey.pfx" />
+    <None Include="POS-SALE_TemporaryKey.pfx" />
+    <None Include="Resources\accept.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cross.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\telephone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cart_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.VisualBasic.PowerPacks.10.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft Visual Basic PowerPacks 10.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cash_register.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\comment_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save_as.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\qip_eating.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\transform_scale.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\database_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\database_delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\database_edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolbox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_white_csharp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\printer1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\update.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exclamation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layer_delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\printer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\reset.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cash_stack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cash_stack1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\master_card.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\visa_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\visa_electron.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cheque.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RPT\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\package_go.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\report_go.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_left1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cross1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mail-trash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mail-trash1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Exit - 03.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Exit - 031.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Exit - 06.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Logout-WF.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\google_talk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bullet_go.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Logout-WF1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Data Export-WF.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Power Off-WF.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Household-Table-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document_insert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document_index.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document_comment_above.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copying_and_distribution.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pencil_add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pencil_delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\report.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\page_go.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\vbox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lorry_go.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\box_down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\package_go1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\accept red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TerrazaSirene.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="cashier_icon-icons.com_53629.ico" />
+    <Content Include="cashier_machine_cash_register_pos_icon_225168.ico" />
+    <None Include="Resources\LetsIconsRefundBack.png" />
+    <None Include="Resources\FluentSaveArrowRight24Regular.png" />
+    <None Include="Resources\MingcuteDelete2Fill.png" />
+    <None Include="Resources\MaterialSymbolsSaveAsSharp.png" />
+    <None Include="Resources\IconoirArrowLeftCircleSolid.png" />
+    <None Include="Resources\FluentDocumentHeaderRemove24Regular.png" />
+    <None Include="Resources\money_dollar.png" />
+    <None Include="Resources\delete.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

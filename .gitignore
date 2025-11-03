@@ -1,0 +1,24 @@
+# Windows reserved names
+nul
+NUL
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# SVN directories
+.svn/
+
+# Local settings
+.claude/settings.local.json

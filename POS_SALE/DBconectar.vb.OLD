@@ -1,0 +1,179 @@
+﻿'Imports System.Data
+'Imports System.Data.OleDb
+'Imports System.Data.SqlClient
+
+Imports MySql.Data.MySqlClient
+Imports System.Data.Odbc
+Public Class DBCONECTAR
+    Dim myConnectionString As String
+    Public usr As Integer
+    Public perfil As Integer
+    '  Dim connexio As OleDbConnection
+    ' Dim myCommand As OleDbCommand
+    Dim connmysql As MySqlConnection
+
+    ' Public connstr As String = "server=localhost;user id='root'; password='std2018**.*'; database=pos_sale; pooling=false"
+    Public connstr As String = "server=localhost;user id='root'; password=''; database=pos_sale; pooling=false"
+    'Public connstr As String = "server='192.168.1.171';user id='root'; password=''; database=pos_std; pooling=false"
+    'Public connstr2 As String = "server='186.103.191.226';user id='rob';port=8506; password='123456'; database=pos_std; pooling=false"
+    'Public connstr2 As String = "server=localhost;user id='root'; password='std2018**.*'; database=pos_sale; pooling=false"
+    Public connstr2 As String = "server=localhost;user id='root'; password=''; database=pos_sale; pooling=false"
+
+    'Public connstr2 As String = "server='192.168.1.171';user id='root'; password=''; database=pos_std; pooling=false"
+
+    Public Function executarmysql(ByVal Sql As String) As MySqlDataReader
+
+        Try
+            connmysql = New MySqlConnection(connstr)
+            connmysql.Open()
+
+            Dim cmd As New MySqlCommand(Sql, connmysql)
+            cmd.CommandType = CommandType.Text
+            
+
+            executarmysql = cmd.ExecuteReader()
+
+            'connmysql.Close()
+        Catch ex As MySqlException
+
+            MessageBox.Show("Error de MYSQL: " + Sql + ex.Message)
+        End Try
+
+    End Function
+    Public Function executardelegatemysql(ByVal Sql As String) As MySqlDataReader
+
+        Try
+            connmysql = New MySqlConnection(connstr2)
+            connmysql.Open()
+
+            Dim cmd As New MySqlCommand(Sql, connmysql)
+            executardelegatemysql = cmd.ExecuteReader()
+
+            'connmysql.Close()
+        Catch ex As MySqlException
+
+
+
+        End Try
+
+    End Function
+
+    Public Function CerrarMysql()     
+        connmysql.Close()
+
+    End Function
+    Public Function Estabilizador()
+        Return connmysql.Ping()
+
+    End Function
+    Public Function executarmysqlTablas(ByVal Sql As String) As DataTable
+        Dim datosread As MySqlDataReader
+        Dim datostabla As DataTable = New DataTable
+
+        Try
+            connmysql = New MySqlConnection(connstr)
+            connmysql.Open()
+
+            Dim cmd As New MySqlCommand(Sql, connmysql)
+            datosread = cmd.ExecuteReader()
+            'executarmysqlTablas.Reset()
+            datostabla.Load(datosread)
+            connmysql.Close()
+
+            executarmysqlTablas.Load(datostabla)
+
+        Catch ex As MySqlException
+            MessageBox.Show("Error de MYSQL: " + Sql + ex.Message)
+        End Try
+
+    End Function
+
+    Public Function executarmysqlprod(ByVal Sql As String) As MySqlDataReader
+        Try
+            connmysql = New MySqlConnection(connstr2)
+            connmysql.Open()
+
+            Dim cmd As New MySqlCommand(Sql, connmysql)
+            executarmysqlprod = cmd.ExecuteReader()
+
+            ' connmysql.Close()
+        Catch ex As MySqlException
+
+            MessageBox.Show("Error de MYSQL: " + Sql + ex.Message)
+        End Try
+
+    End Function
+
+    Public Function executarmysqlinsert(ByVal Sql As String) As Integer
+
+        Try
+
+            connmysql = New MySqlConnection(connstr)
+            connmysql.Open()
+
+            Dim cmd As New MySqlCommand(Sql, connmysql)
+
+            Return executarmysqlinsert = cmd.ExecuteNonQuery
+
+            ' connmysql.Close()
+        Catch ex As MySqlException
+
+            MessageBox.Show("Error de MYSQL:  " + Sql + ex.Message)
+
+        End Try
+
+
+    End Function
+    Public Function executarmysqlinsertProd(ByVal Sql As String) As Integer
+
+        Try
+
+            connmysql = New MySqlConnection(connstr2)
+            connmysql.Open()
+
+            Dim cmd As New MySqlCommand(Sql, connmysql)
+
+            Return executarmysqlinsertProd = cmd.ExecuteNonQuery
+
+            ' connmysql.Close()
+        Catch ex As MySqlException
+
+            MessageBox.Show("Error de MYSQL:  " + Sql + ex.Message)
+
+        End Try
+
+
+    End Function
+    Public Sub coneccionsqlmanager()
+
+        Try
+            conexionBD = New OdbcConnection("dsn=Manager123;uid=sa;pwd=;")
+
+        Catch ex As OdbcException
+            MsgBox("Ocurrio un problema al conectarse a la base de datos")
+            Exit Sub
+        End Try
+
+        conexionBD.Open()
+
+    End Sub
+    Public Function executarsqlmanager(ByVal sql As String) As OdbcDataReader
+
+        coneccionsqlmanager()
+        Try
+
+            Dim comandoSQL As OdbcCommand = _
+                New OdbcCommand(sql, conexionBD)
+            Dim resultadoSQL As OdbcDataReader = _
+                comandoSQL.ExecuteReader()
+            executarsqlmanager = resultadoSQL
+            'CerrarBD()
+        Catch ex As OdbcException
+            MsgBox("Ocurrio un error al ejecutar comandos" & ex.Message)
+            'CerrarBD()
+            Exit Function
+        End Try
+
+    End Function
+
+End Class
