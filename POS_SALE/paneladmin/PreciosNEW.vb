@@ -16,7 +16,7 @@
         Dim dptoob As System.Data.SQLite.SQLiteDataReader
         Dim tablas As DataTable = New DataTable
 
-        sql = "select numdpto, descripcion  from pos_std.dpto where activo=1 order by descripcion"
+        sql = "select numdpto, descripcion  from dpto where activo=1 order by descripcion"
 
         If idsucursalpublic = 14 Then
 
@@ -42,7 +42,7 @@
         Dim dptoob As System.Data.SQLite.SQLiteDataReader
         Dim tablas As DataTable = New DataTable
        
-        sql = "select codarticulo as COD,pbruto as Precio from pos_std.precioproductos where codarticulo=" & idproducto
+        sql = "select codarticulo as COD,pbruto as Precio from precioproductos where codarticulo=" & idproducto
 
         dptoob = objconnn.ExecutarMySQL(sql)
 
@@ -63,15 +63,15 @@
         Dim row1 As DataRowView = DirectCast(cmbdpto.SelectedItem, DataRowView)
         Dim row2 As DataRowView = DirectCast(cmbseccion.SelectedItem, DataRowView)
         'sql = "SELECT a.CodArticulo, a.Descripcion,a.descatalogado"
-        'sql = sql & " FROM pos_std.productos a "
+        'sql = sql & " FROM productos a "
         'sql = sql & " where a.descatalogado='F' and a.dpto=" & row1.Item("numdpto") & " and a.seccion=" & row2.Item("numseccion") & " order by descripcion"
 
         If txtprodbusca.TextLength > 2 Then
             sql = "SELECT a.CodArticulo, a.Descripcion as Producto,b.descripcion as Dpto,c.descripcion as Seccion"
-            sql = sql & " FROM pos_std.productos a "
-            sql = sql & " inner join pos_std.dpto b on a.dpto=b.numdpto"
-            sql = sql & " inner join pos_std.secciones c on a.seccion=c.numseccion"
-            sql = sql & " where b.activo=1 and a.descatalogado='F' and  ucase(a.Descripcion) like '%" & txtprodbusca.Text.ToUpper & "%' order by a.descripcion"
+            sql = sql & " FROM productos a "
+            sql = sql & " inner join dpto b on a.dpto=b.numdpto"
+            sql = sql & " inner join secciones c on a.seccion=c.numseccion"
+            sql = sql & " where b.activo=1 and a.descatalogado='F' and  UPPER(a.Descripcion) like '%" & txtprodbusca.Text.ToUpper & "%' order by a.descripcion"
 
 
             If idsucursalpublic = 0 Then
@@ -100,7 +100,7 @@
         Dim dptoob As System.Data.SQLite.SQLiteDataReader
         Dim tablas As DataTable = New DataTable
         Dim row As DataRowView = DirectCast(cmbdpto.SelectedItem, DataRowView)
-        sql = "select numseccion, descripcion  from pos_std.secciones where numdpto=" & row.Item("numdpto") & " order by descripcion"
+        sql = "select numseccion, descripcion  from secciones where numdpto=" & row.Item("numdpto") & " order by descripcion"
 
         If idsucursalpublic = 0 Then
 
@@ -143,7 +143,7 @@
         Dim objconnn As DBCONECTAR1 = New DBCONECTAR1
         Dim sql As String
         Precioss = InputBox(" INGRESE EL PRECIO ")
-        sql = "insert into pos_std.precioproductos (codarticulo,pbruto)  values(" & idproducto & "," & Precioss & ")"
+        sql = "insert into precioproductos (codarticulo,pbruto)  values(" & idproducto & "," & Precioss & ")"
 
         Try
             objconnn.ExecutarMySQL(sql)
@@ -162,7 +162,7 @@
             For Each row As DataGridViewRow In grillaprecios.SelectedRows()
 
                 Dim idunico As Object = row.Cells(1).Value
-                sql = "delete  from  pos_std.precioproductos where  codarticulo=" & idproducto & " and pbruto='" & idunico & "'"
+                sql = "delete  from  precioproductos where  codarticulo=" & idproducto & " and pbruto='" & idunico & "'"
 
                 objconnn.ExecutarMySQL(sql)
 
@@ -195,9 +195,9 @@
 
 
         sql = "SELECT a.CodArticulo, a.Descripcion as Producto,a.descatalogado,b.descripcion as Dpto,c.descripcion as Seccion ,a.pedidoloc as Pedido"
-        sql = sql & " FROM pos_std.productos a "
-        sql = sql & " inner join pos_std.dpto b on a.dpto=b.numdpto"
-        sql = sql & " inner join pos_std.secciones c on a.seccion=c.numseccion"
+        sql = sql & " FROM productos a "
+        sql = sql & " inner join dpto b on a.dpto=b.numdpto"
+        sql = sql & " inner join secciones c on a.seccion=c.numseccion"
         sql = sql & " where a.descatalogado='F' and a.dpto=" & row1.Item("numdpto") & " and a.seccion=" & row2.Item("numseccion") & " order by a.descripcion"
 
 

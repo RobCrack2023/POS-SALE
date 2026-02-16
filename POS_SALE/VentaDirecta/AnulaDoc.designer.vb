@@ -114,10 +114,10 @@ Partial Class AnulaDoc
         '
         resources.ApplyResources(Me.txtfecha, "txtfecha")
         Me.txtfecha.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.txtfecha.MaxDate = New Date(2025, 12, 31, 0, 0, 0, 0)
-        Me.txtfecha.MinDate = New Date(2017, 1, 1, 0, 0, 0, 0)
+        Me.txtfecha.MaxDate = New Date(2028, 1, 1, 0, 0, 0, 0)
+        Me.txtfecha.MinDate = New Date(2025, 1, 1, 0, 0, 0, 0)
         Me.txtfecha.Name = "txtfecha"
-        Me.txtfecha.Value = New Date(2018, 10, 9, 0, 0, 0, 0)
+        Me.txtfecha.Value = New Date(2026, 2, 15, 0, 0, 0, 0)
         '
         'Label4
         '

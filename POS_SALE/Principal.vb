@@ -56,8 +56,10 @@ Public Class Principal
 
     Private Sub btnconf_Click(sender As Object, e As EventArgs) Handles btnconf.Click
         ' MÓDULO NO DISPONIBLE - Conf.vb (Configuracion) excluido del proyecto (no migrado a SQLite)
-        MessageBox.Show("El módulo de Configuración no está disponible actualmente." & vbCrLf & "Contacte al administrador del sistema.", "Módulo no disponible", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        'MessageBox.Show("El módulo de Configuración no está disponible actualmente." & vbCrLf & "Contacte al administrador del sistema.", "Módulo no disponible", MessageBoxButtons.OK, MessageBoxIcon.Information)
         ' Configuracion.ShowDialog()
+        Configuracion.ShowDialog()
+
     End Sub
     Public Sub ActualizaDatos()
         Dim proces As New Process()
@@ -187,24 +189,9 @@ Public Class Principal
         ' Me.Close()
     End Sub
 
-    Private Sub btnencemp_Click(sender As Object, e As EventArgs) Handles btnencemp.Click
-      
-    End Sub
-
-    Private Sub btntest_Click(sender As Object, e As EventArgs) Handles btntest.Click
-        'Dim asinc As Asincronica = New Asincronica
-        'asinc.EnviaCorreo("e", "e")
-        ' AdminEncargo.ImprimeComandaAutomatica()
-
-        ' PreciosNEW.Show()
-
-        'ActualizaEstado()
-
-
-        'PagoTotal.ImprimePdfDte()
-        ' PagoTotal.ObtieneDatosSiiEmpresa()
-        PagoTotal.GeneraDTE(52, 7, "78028380-7", "Comercial Caracol Ltda", "Cafeteria", "Av. Sucre 545", "Ñuñoa", "Santiago", 7015990)
-
+    Private Sub btnencemp_Click(sender As Object, e As EventArgs)
 
     End Sub
+
+
 End Class

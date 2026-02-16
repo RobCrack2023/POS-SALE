@@ -79,7 +79,7 @@
             sql = sql & " FROM productos a "
             sql = sql & " inner join dpto b on a.dpto=b.numdpto"
             sql = sql & " inner join secciones c on a.seccion=c.numseccion"
-            sql = sql & " where b.activo=1 and a.descatalogado='" & IIf(Me.descatalog.Checked = True, "T", "F") & "' and  ucase(a.Descripcion) like '%" & txtprodbusca.Text.ToUpper & "%' order by a.descripcion"
+            sql = sql & " where b.activo=1 and a.descatalogado='" & IIf(Me.descatalog.Checked = True, "T", "F") & "' and  UPPER(a.Descripcion) like '%" & txtprodbusca.Text.ToUpper & "%' order by a.descripcion"
 
 
             If idsucursalpublic = 14 Then

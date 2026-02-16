@@ -226,6 +226,12 @@
     -->
     <!-- ========== FIN MÓDULO PANELADMIN ========== -->
     <Compile Include="Imprime.vb" />
+    <Compile Include="paneladmin\Conf.Designer.vb">
+      <DependentUpon>Conf.vb</DependentUpon>
+    </Compile>
+    <Compile Include="paneladmin\Conf.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <!-- MÓDULOS PedidoLocales OMITIDOS - No migrados a SQLite (baja prioridad) -->
     <!--
     <Compile Include="PedidoLocales\Consolidado.Designer.vb">
@@ -288,12 +294,6 @@
     <!-- FIN MÓDULOS PedidoLocales OMITIDOS -->
     <!-- Stock.vb incluido - necesario para control de inventario en ventas -->
     <Compile Include="PedidoLocales\Stock.vb" />
-    <Compile Include="pedlocfecha.Designer.vb">
-      <DependentUpon>pedlocfecha.vb</DependentUpon>
-    </Compile>
-    <Compile Include="pedlocfecha.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Stock\CargaStock.Designer.vb">
       <DependentUpon>CargaStock.vb</DependentUpon>
     </Compile>
@@ -301,12 +301,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="varglobales.vb" />
-    <Compile Include="sinred.Designer.vb">
-      <DependentUpon>sinred.vb</DependentUpon>
-    </Compile>
-    <Compile Include="sinred.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="paneladmin\NuevoProd.Designer.vb">
       <DependentUpon>NuevoProd.vb</DependentUpon>
     </Compile>
@@ -317,12 +311,6 @@
       <DependentUpon>PreciosNEW.vb</DependentUpon>
     </Compile>
     <Compile Include="paneladmin\PreciosNEW.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Print.Designer.vb">
-      <DependentUpon>Print.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Print.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Principal.Designer.vb">
@@ -510,21 +498,11 @@
     </EmbeddedResource>
     -->
     <!-- FIN RECURSOS PedidoLocales OMITIDOS -->
-    <EmbeddedResource Include="pedlocfecha.resx">
-      <DependentUpon>pedlocfecha.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="sinred.resx">
-      <DependentUpon>sinred.vb</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="paneladmin\NuevoProd.resx">
       <DependentUpon>NuevoProd.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="paneladmin\PreciosNEW.resx">
       <DependentUpon>PreciosNEW.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Print.resx">
-      <DependentUpon>Print.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Principal.resx">
       <DependentUpon>Principal.vb</DependentUpon>

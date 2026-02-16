@@ -13,6 +13,13 @@ Public Class DBCONECTAR1
     Private Shared ReadOnly DB_PATH As String = Path.Combine(Application.StartupPath, "Data", "pos_sale.db")
     Private Shared ReadOnly CONNECTION_STRING As String = BuildConnectionString()
 
+    ''' <summary>Ruta completa al archivo de base de datos SQLite.</summary>
+    Public Shared ReadOnly Property RutaBD As String
+        Get
+            Return DB_PATH
+        End Get
+    End Property
+
     ' Propiedades públicas (compatibilidad con código existente)
     Public usr As Integer
     Public perfil As Integer
@@ -38,15 +45,75 @@ Public Class DBCONECTAR1
 
     Private Shared Sub InitializeDatabase()
         If Not File.Exists(DB_PATH) Then
-            SQLiteConnection.CreateFile(DB_PATH)
-
-            Using conn As New SQLiteConnection(CONNECTION_STRING)
-                conn.Open()
-                CreateTables(conn)
-                CreateIndexes(conn)
-                InsertDefaultData(conn)
-            End Using
+            CrearBDDesdesCero()
+        Else
+            AplicarMigraciones()
         End If
+    End Sub
+
+    ''' <summary>
+    ''' Agrega columnas que faltan en una BD existente (migraciones incrementales).
+    ''' Seguro de ejecutar múltiples veces: solo actúa si la columna no existe.
+    ''' </summary>
+    Private Shared Sub AplicarMigraciones()
+        Using conn As New SQLiteConnection(CONNECTION_STRING)
+            conn.Open()
+            Using cmd As New SQLiteCommand(conn)
+
+                ' --- config: idsucursal (agregado en v2) ---
+                If Not ColumnaExiste(conn, "config", "idsucursal") Then
+                    cmd.CommandText = "ALTER TABLE config ADD COLUMN idsucursal INTEGER DEFAULT 0"
+                    cmd.ExecuteNonQuery()
+                End If
+
+                ' --- config: idimprpt (agregado en v2) ---
+                If Not ColumnaExiste(conn, "config", "idimprpt") Then
+                    cmd.CommandText = "ALTER TABLE config ADD COLUMN idimprpt TEXT"
+                    cmd.ExecuteNonQuery()
+                End If
+
+            End Using
+        End Using
+    End Sub
+
+    Private Shared Function ColumnaExiste(conn As SQLiteConnection, tabla As String, columna As String) As Boolean
+        Using cmd As New SQLiteCommand($"PRAGMA table_info({tabla})", conn)
+            Using reader = cmd.ExecuteReader()
+                While reader.Read()
+                    If reader("name").ToString().ToLower() = columna.ToLower() Then
+                        Return True
+                    End If
+                End While
+            End Using
+        End Using
+        Return False
+    End Function
+
+    ''' <summary>
+    ''' Borra la BD existente y la recrea con esquema vacío + datos por defecto.
+    ''' Usar desde el form de Configuración al reinstalar el POS.
+    ''' </summary>
+    Public Shared Sub ReinicializarBD()
+        ' Cerrar cualquier conexión estática en caché
+        SQLiteConnection.ClearAllPools()
+
+        If File.Exists(DB_PATH) Then
+            File.Delete(DB_PATH)
+        End If
+
+        CrearBDDesdesCero()
+    End Sub
+
+    Private Shared Sub CrearBDDesdesCero()
+        Directory.CreateDirectory(Path.GetDirectoryName(DB_PATH))
+        SQLiteConnection.CreateFile(DB_PATH)
+
+        Using conn As New SQLiteConnection(CONNECTION_STRING)
+            conn.Open()
+            CreateTables(conn)
+            CreateIndexes(conn)
+            InsertDefaultData(conn)
+        End Using
     End Sub
 
     Private Shared Sub ConfigureSQLiteForPOS()
@@ -350,8 +417,10 @@ Public Class DBCONECTAR1
             ' Tabla de configuración
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS config (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                idcaja INTEGER NOT NULL,
+                idsucursal INTEGER DEFAULT 0,
+                idcaja INTEGER DEFAULT 0,
                 idimpticket TEXT,
+                idimprpt TEXT,
                 sql1 TEXT
             )"
             cmd.ExecuteNonQuery()
@@ -359,51 +428,63 @@ Public Class DBCONECTAR1
             ' Tabla de productos
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS productos (
                 codarticulo INTEGER PRIMARY KEY,
-                descripcion TEXT NOT NULL,
+                descripcion TEXT,
+                dpto INTEGER,
+                seccion INTEGER,
+                refproveedor TEXT,
+                unidadmedida TEXT,
+                medidareferencia INTEGER DEFAULT 1,
+                pedidoloc INTEGER DEFAULT 0,
+                porpeso TEXT,
+                descatalogado TEXT,
                 precio INTEGER DEFAULT 0,
                 stock INTEGER DEFAULT 0,
-                medidareferencia INTEGER DEFAULT 1,
                 activo INTEGER DEFAULT 1
             )"
             cmd.ExecuteNonQuery()
 
             ' Tabla de productos por venta
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_prodvta (
-                id_prodvta INTEGER PRIMARY KEY AUTOINCREMENT,
                 id_producto INTEGER NOT NULL,
                 cod_plu INTEGER NOT NULL,
-                precio INTEGER NOT NULL,
                 id_sucursal INTEGER NOT NULL,
                 id_activo INTEGER DEFAULT 1,
+                descuentos INTEGER DEFAULT 0,
+                precio REAL DEFAULT 0,
                 id_plibre INTEGER DEFAULT 0,
+                PRIMARY KEY (id_producto, cod_plu, id_sucursal),
                 FOREIGN KEY (id_producto) REFERENCES productos(codarticulo)
             )"
             cmd.ExecuteNonQuery()
 
             ' Tabla de turnos Z
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_z (
-                id_cabz INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_sucursal INTEGER NOT NULL,
-                id_caja INTEGER NOT NULL,
-                fec_ini DATE NOT NULL,
-                hrs_ini TIME NOT NULL,
+                id_cabz INTEGER PRIMARY KEY,
+                id_sucursal INTEGER,
+                id_caja INTEGER,
+                fec_ini DATE,
+                hrs_ini TIME,
                 fec_ter DATE,
                 hrs_ter TIME,
+                num_z INTEGER,
                 estado INTEGER DEFAULT 1
             )"
             cmd.ExecuteNonQuery()
 
             ' Tabla cabecera de ventas
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_cab (
-                id_vencab INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_sucursal INTEGER NOT NULL,
-                id_caja INTEGER NOT NULL,
-                id_usuario INTEGER NOT NULL,
-                fecha DATE NOT NULL,
-                hora TIME NOT NULL,
-                id_vtaz INTEGER NOT NULL,
-                total INTEGER DEFAULT 0,
+                id_vencab INTEGER PRIMARY KEY,
+                id_sucursal INTEGER,
+                id_caja INTEGER,
+                id_usuario INTEGER,
+                fecha DATE,
+                hora TIME,
+                id_vtaz INTEGER,
+                total REAL DEFAULT 0,
                 estado INTEGER DEFAULT 1,
+                numboleta INTEGER,
+                id_mtvoanula INTEGER,
+                obsmtvoanula TEXT,
                 FOREIGN KEY (id_usuario) REFERENCES usuario(idusuario),
                 FOREIGN KEY (id_vtaz) REFERENCES vta_z(id_cabz)
             )"
@@ -411,12 +492,13 @@ Public Class DBCONECTAR1
 
             ' Tabla detalle de ventas
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_det (
-                id_detvta INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_cabvta INTEGER NOT NULL,
-                id_producto INTEGER NOT NULL,
+                id_detvta INTEGER PRIMARY KEY,
+                id_cabvta INTEGER,
+                id_producto INTEGER,
                 numunico INTEGER,
-                cant DECIMAL(10,3) NOT NULL,
-                precio_unitario INTEGER NOT NULL,
+                cant DECIMAL(10,3),
+                precio_unitario INTEGER,
+                desc_producto TEXT,
                 FOREIGN KEY (id_cabvta) REFERENCES vta_cab(id_vencab),
                 FOREIGN KEY (id_producto) REFERENCES productos(codarticulo)
             )"
@@ -425,21 +507,22 @@ Public Class DBCONECTAR1
             ' Tabla de tipos de pago
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_tipopago (
                 id_tipopago INTEGER PRIMARY KEY AUTOINCREMENT,
-                texto_tipopago TEXT NOT NULL,
-                color_tipopago TEXT DEFAULT 'White',
-                posicion INTEGER DEFAULT 0,
+                texto_tipopago TEXT,
+                img_tipopago BLOB,
+                color_tipopago TEXT,
                 in_doc INTEGER DEFAULT 0,
-                id_activo INTEGER DEFAULT 1
+                id_activo INTEGER DEFAULT 1,
+                Posicion INTEGER DEFAULT 0
             )"
             cmd.ExecuteNonQuery()
 
             ' Tabla de pagos
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_pago (
-                id_pago INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_cabvta INTEGER NOT NULL,
-                id_tipo INTEGER NOT NULL,
-                monto INTEGER NOT NULL,
-                cambio INTEGER DEFAULT 0,
+                id_cabvta INTEGER NOT NULL DEFAULT 0,
+                id_tipo INTEGER NOT NULL DEFAULT 0,
+                monto REAL NOT NULL DEFAULT 0,
+                cambio INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY (id_cabvta, id_tipo, monto, cambio),
                 FOREIGN KEY (id_cabvta) REFERENCES vta_cab(id_vencab),
                 FOREIGN KEY (id_tipo) REFERENCES vta_tipopago(id_tipopago)
             )"
@@ -447,24 +530,21 @@ Public Class DBCONECTAR1
 
             ' Tabla de log de productos
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_log (
-                id_log INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_vtacab INTEGER NOT NULL,
+                id_vtacab INTEGER,
                 log_desc TEXT,
-                id_cabz INTEGER,
-                fecha_log DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (id_vtacab) REFERENCES vta_cab(id_vencab)
+                id_cabz INTEGER
             )"
             cmd.ExecuteNonQuery()
 
             ' Tabla de descuentos
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_descuento (
-                id_descuento INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_cabvta INTEGER NOT NULL,
-                id_usuario INTEGER NOT NULL,
-                fecha DATE NOT NULL,
-                hora TIME NOT NULL,
-                monto_ant INTEGER NOT NULL,
-                monto_desc INTEGER NOT NULL,
+                id_vtadescuento INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_cabvta INTEGER,
+                id_usuario INTEGER,
+                fecha DATE,
+                hora TIME,
+                monto_ant INTEGER,
+                monto_desc INTEGER,
                 FOREIGN KEY (id_cabvta) REFERENCES vta_cab(id_vencab),
                 FOREIGN KEY (id_usuario) REFERENCES usuario(idusuario)
             )"
@@ -472,20 +552,22 @@ Public Class DBCONECTAR1
 
             ' Tabla de sucursales
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS sucursal (
-                id_sucursal INTEGER PRIMARY KEY AUTOINCREMENT,
-                nom_sucursal TEXT NOT NULL,
-                id_sucursalTalana INTEGER,
-                activo INTEGER DEFAULT 1
+                id_Sucursal INTEGER PRIMARY KEY AUTOINCREMENT,
+                Nom_Sucursal TEXT,
+                id_empresa INTEGER,
+                suc_ab TEXT,
+                activo_caja INTEGER,
+                id_sucursalTalana INTEGER
             )"
             cmd.ExecuteNonQuery()
 
             ' Tabla de boletas para arqueos
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_boleta (
-                id_boleta INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_vtaz INTEGER NOT NULL,
-                id_vtacab INTEGER NOT NULL,
-                numini INTEGER NOT NULL,
-                numfin INTEGER NOT NULL,
+                id_vtaboleta INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_vtaz INTEGER,
+                id_vtacab INTEGER,
+                numini INTEGER,
+                numfin INTEGER,
                 FOREIGN KEY (id_vtaz) REFERENCES vta_z(id_cabz),
                 FOREIGN KEY (id_vtacab) REFERENCES vta_cab(id_vencab)
             )"
@@ -493,27 +575,25 @@ Public Class DBCONECTAR1
 
             ' Tabla de arqueos de caja
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_arqueo (
-                id_arqueo INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_vtaz INTEGER NOT NULL,
+                id_vtaz INTEGER PRIMARY KEY,
                 efectivo INTEGER DEFAULT 0,
                 tdebito INTEGER DEFAULT 0,
                 tcredito INTEGER DEFAULT 0,
                 sodexo INTEGER DEFAULT 0,
                 amipass INTEGER DEFAULT 0,
                 trestaurant INTEGER DEFAULT 0,
-                fecha_arqueo DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (id_vtaz) REFERENCES vta_z(id_cabz)
             )"
             cmd.ExecuteNonQuery()
 
             ' Tabla de pagos extendida (con rut_varios)
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_pago2 (
-                id_pago2 INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_cabvta INTEGER NOT NULL,
-                id_tipo INTEGER NOT NULL,
-                monto INTEGER NOT NULL,
-                cambio INTEGER DEFAULT 0,
+                id_cabvta INTEGER NOT NULL DEFAULT 0,
+                id_tipo INTEGER NOT NULL DEFAULT 0,
+                monto REAL NOT NULL DEFAULT 0,
+                cambio INTEGER NOT NULL DEFAULT 0,
                 rut_varios TEXT,
+                PRIMARY KEY (id_cabvta, id_tipo, monto, cambio),
                 FOREIGN KEY (id_cabvta) REFERENCES vta_cab(id_vencab),
                 FOREIGN KEY (id_tipo) REFERENCES vta_tipopago(id_tipopago)
             )"
@@ -530,22 +610,22 @@ Public Class DBCONECTAR1
             ' Tabla de tipos de movimiento
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_tipomov (
                 id_vtatipomov INTEGER PRIMARY KEY AUTOINCREMENT,
-                desc_vtatipomov TEXT NOT NULL,
-                tipo_mov INTEGER NOT NULL,
-                activo INTEGER DEFAULT 1
+                desc_vtatipomov TEXT,
+                tipo INTEGER,
+                id_tipocuenta INTEGER
             )"
             cmd.ExecuteNonQuery()
 
             ' Tabla de movimientos de caja (ingreso/egreso)
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_mov (
-                id_mov_reg INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_vtaz INTEGER NOT NULL,
-                id_mov INTEGER NOT NULL,
-                id_cuenta INTEGER NOT NULL,
-                monto INTEGER NOT NULL,
-                fecha DATE NOT NULL,
-                hora TIME NOT NULL,
-                observacion TEXT,
+                id_movvtacab INTEGER PRIMARY KEY,
+                id_cabvta INTEGER,
+                id_cuenta INTEGER,
+                id_mov INTEGER,
+                id_tipo INTEGER,
+                monto INTEGER,
+                obs TEXT,
+                id_vtaz INTEGER,
                 FOREIGN KEY (id_vtaz) REFERENCES vta_z(id_cabz),
                 FOREIGN KEY (id_mov) REFERENCES vta_tipomov(id_vtatipomov),
                 FOREIGN KEY (id_cuenta) REFERENCES vta_cuentas(id_vtacuentas)
@@ -595,10 +675,12 @@ Public Class DBCONECTAR1
 
             ' Tabla de personal (para varios)
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS personaltalana (
-                id_personal INTEGER PRIMARY KEY AUTOINCREMENT,
-                rut TEXT NOT NULL UNIQUE,
-                nombres TEXT NOT NULL,
-                activo TEXT DEFAULT 'true'
+                rut TEXT NOT NULL,
+                nombres TEXT,
+                id_sucursal INTEGER,
+                jefe INTEGER,
+                activo TEXT,
+                PRIMARY KEY (rut)
             )"
             cmd.ExecuteNonQuery()
 
@@ -723,11 +805,117 @@ Public Class DBCONECTAR1
             ' Tabla de clientes para pedidos
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS cliente (
                 idcliente INTEGER PRIMARY KEY AUTOINCREMENT,
-                Nombre TEXT NOT NULL,
+                Nombre TEXT,
                 telefono1 TEXT,
-                idsucursal INTEGER NOT NULL,
+                idsucursal INTEGER,
                 rut TEXT,
                 activo INTEGER DEFAULT 1
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de departamentos
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS dpto (
+                NUMDPTO INTEGER PRIMARY KEY AUTOINCREMENT,
+                DESCRIPCION TEXT,
+                ACTIVO INTEGER DEFAULT 1
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de secciones
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS secciones (
+                NUMSECCION INTEGER PRIMARY KEY AUTOINCREMENT,
+                NUMDPTO INTEGER,
+                DESCRIPCION TEXT
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de unidades de medida
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS umedida (
+                idumedida INTEGER PRIMARY KEY,
+                descrip TEXT
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de precios por producto
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS precioproductos (
+                CODARTICULO INTEGER NOT NULL,
+                PBRUTO INTEGER NOT NULL,
+                SUCURSAl INTEGER NOT NULL,
+                PRIMARY KEY (CODARTICULO, PBRUTO, SUCURSAl)
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de boletas nulas
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_boleta_nula (
+                id_vtaz INTEGER NOT NULL DEFAULT 0,
+                num_boleta INTEGER NOT NULL DEFAULT 0,
+                fecha DATE,
+                monto INTEGER,
+                motivo TEXT,
+                rut TEXT,
+                PRIMARY KEY (id_vtaz, num_boleta)
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de restricciones de movimientos
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_movrestriccion (
+                id_vtarestriccion INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_cuenta INTEGER,
+                id_mov INTEGER
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de stock de ventas
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_stock (
+                id_stock INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_sucursal INTEGER,
+                id_producto INTEGER,
+                fecha DATE,
+                hora TIME,
+                cantidad DECIMAL(11,3),
+                nro_guia INTEGER,
+                id_pedidocab INTEGER
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de tipos de documento
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_tipodoc (
+                id_tipodoc INTEGER PRIMARY KEY,
+                desc TEXT
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de estados de venta
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_estado (
+                id_vtaestado INTEGER PRIMARY KEY,
+                descrip TEXT
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla de efectivo por venta
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_efectivo (
+                id_vtaefectivo INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_vtaz INTEGER,
+                id_vtacab INTEGER,
+                monto INTEGER
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla cabecera de mesas
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_cabmesas (
+                idcab_mesa INTEGER PRIMARY KEY AUTOINCREMENT,
+                nombre TEXT,
+                id_sucursal INTEGER,
+                id_activo INTEGER
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' Tabla detalle de mesas
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_detmesas (
+                idcab_mesa INTEGER PRIMARY KEY,
+                id_nunmesa INTEGER,
+                x INTEGER,
+                y INTEGER
             )"
             cmd.ExecuteNonQuery()
 
@@ -765,13 +953,19 @@ Public Class DBCONECTAR1
             cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_vta_boleta_vtaz ON vta_boleta(id_vtaz)"
             cmd.ExecuteNonQuery()
 
-            cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_vta_arqueo_vtaz ON vta_arqueo(id_vtaz)"
-            cmd.ExecuteNonQuery()
-
             cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_vta_pago2_cabvta ON vta_pago2(id_cabvta)"
             cmd.ExecuteNonQuery()
 
             cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_vta_mov_vtaz ON vta_mov(id_vtaz)"
+            cmd.ExecuteNonQuery()
+
+            cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_vta_stock_sucursal ON vta_stock(id_sucursal)"
+            cmd.ExecuteNonQuery()
+
+            cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_dpto_activo ON dpto(ACTIVO)"
+            cmd.ExecuteNonQuery()
+
+            cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_secciones_dpto ON secciones(NUMDPTO)"
             cmd.ExecuteNonQuery()
 
             cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_vta_creditos_ente ON vta_creditos(id_ente, id_sucursal)"
@@ -809,11 +1003,11 @@ Public Class DBCONECTAR1
     Private Shared Sub InsertDefaultData(conn As SQLiteConnection)
         Using cmd As New SQLiteCommand(conn)
             ' Configuración básica
-            cmd.CommandText = "INSERT OR IGNORE INTO config (idcaja, idimpticket) VALUES (1, 'Microsoft Print to PDF')"
+            cmd.CommandText = "INSERT OR IGNORE INTO config (id, idsucursal, idcaja, idimpticket, idimprpt) VALUES (1, 0, 0, '', '')"
             cmd.ExecuteNonQuery()
 
             ' Sucursal principal
-            cmd.CommandText = "INSERT OR IGNORE INTO sucursal (id_sucursal, nom_sucursal, id_sucursalTalana) VALUES (1, 'Sucursal Principal', 1)"
+            cmd.CommandText = "INSERT OR IGNORE INTO sucursal (id_Sucursal, Nom_Sucursal, id_sucursalTalana) VALUES (1, 'Sucursal Principal', 1)"
             cmd.ExecuteNonQuery()
 
             ' Usuario administrador por defecto
@@ -866,10 +1060,10 @@ Public Class DBCONECTAR1
             cmd.ExecuteNonQuery()
 
             ' Tipos de movimiento (ingreso/egreso)
-            cmd.CommandText = "INSERT OR IGNORE INTO vta_tipomov (id_vtatipomov, desc_vtatipomov, tipo_mov) VALUES (1, 'Ingreso', 1)"
+            cmd.CommandText = "INSERT OR IGNORE INTO vta_tipomov (id_vtatipomov, desc_vtatipomov, tipo) VALUES (1, 'Ingreso', 1)"
             cmd.ExecuteNonQuery()
 
-            cmd.CommandText = "INSERT OR IGNORE INTO vta_tipomov (id_vtatipomov, desc_vtatipomov, tipo_mov) VALUES (2, 'Egreso', 2)"
+            cmd.CommandText = "INSERT OR IGNORE INTO vta_tipomov (id_vtatipomov, desc_vtatipomov, tipo) VALUES (2, 'Egreso', 2)"
             cmd.ExecuteNonQuery()
 
             ' Cuentas contables

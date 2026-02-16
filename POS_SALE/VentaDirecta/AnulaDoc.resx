@@ -112,28 +112,31 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="checknulos.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="checknulos.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 18pt</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="checknulos.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="checknulos.Location" type="System.Drawing.Point, System.Drawing">
-    <value>443, 36</value>
+    <value>591, 45</value>
+  </data>
+  <data name="checknulos.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="checknulos.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 33</value>
+    <value>164, 40</value>
   </data>
   <data name="checknulos.TabIndex" type="System.Int32, mscorlib">
     <value>61</value>
@@ -145,7 +148,7 @@
     <value>checknulos</value>
   </data>
   <data name="&gt;&gt;checknulos.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;checknulos.Parent" xml:space="preserve">
     <value>GroupBox2</value>
@@ -160,10 +163,13 @@
     <value>NoControl</value>
   </data>
   <data name="btnbuscar.Location" type="System.Drawing.Point, System.Drawing">
-    <value>708, 36</value>
+    <value>944, 45</value>
+  </data>
+  <data name="btnbuscar.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btnbuscar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 40</value>
+    <value>171, 50</value>
   </data>
   <data name="btnbuscar.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -175,7 +181,7 @@
     <value>btnbuscar</value>
   </data>
   <data name="&gt;&gt;btnbuscar.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnbuscar.Parent" xml:space="preserve">
     <value>GroupBox2</value>
@@ -190,10 +196,13 @@
     <value>NoControl</value>
   </data>
   <data name="Label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>193, 11</value>
+    <value>257, 14</value>
+  </data>
+  <data name="Label1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
   </data>
   <data name="Label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
+    <value>67, 25</value>
   </data>
   <data name="Label1.TabIndex" type="System.Int32, mscorlib">
     <value>57</value>
@@ -205,7 +214,7 @@
     <value>Label1</value>
   </data>
   <data name="&gt;&gt;Label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label1.Parent" xml:space="preserve">
     <value>GroupBox2</value>
@@ -217,10 +226,13 @@
     <value>Microsoft Sans Serif, 20.25pt</value>
   </data>
   <data name="txtfecha.Location" type="System.Drawing.Point, System.Drawing">
-    <value>197, 35</value>
+    <value>263, 44</value>
+  </data>
+  <data name="txtfecha.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="txtfecha.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 38</value>
+    <value>227, 46</value>
   </data>
   <data name="txtfecha.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -229,7 +241,7 @@
     <value>txtfecha</value>
   </data>
   <data name="&gt;&gt;txtfecha.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DateTimePicker, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DateTimePicker, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtfecha.Parent" xml:space="preserve">
     <value>GroupBox2</value>
@@ -244,10 +256,13 @@
     <value>NoControl</value>
   </data>
   <data name="Label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 13</value>
+    <value>11, 16</value>
+  </data>
+  <data name="Label4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
   </data>
   <data name="Label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 20</value>
+    <value>92, 25</value>
   </data>
   <data name="Label4.TabIndex" type="System.Int32, mscorlib">
     <value>53</value>
@@ -259,7 +274,7 @@
     <value>Label4</value>
   </data>
   <data name="&gt;&gt;Label4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Label4.Parent" xml:space="preserve">
     <value>GroupBox2</value>
@@ -271,10 +286,13 @@
     <value>Microsoft Sans Serif, 20.25pt</value>
   </data>
   <data name="txtticket.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 35</value>
+    <value>11, 44</value>
+  </data>
+  <data name="txtticket.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="txtticket.Size" type="System.Drawing.Size, System.Drawing">
-    <value>176, 38</value>
+    <value>233, 46</value>
   </data>
   <data name="txtticket.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -283,7 +301,7 @@
     <value>txtticket</value>
   </data>
   <data name="&gt;&gt;txtticket.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtticket.Parent" xml:space="preserve">
     <value>GroupBox2</value>
@@ -300,8 +318,11 @@
   <data name="lberror.Location" type="System.Drawing.Point, System.Drawing">
     <value>1, -2</value>
   </data>
+  <data name="lberror.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
+  </data>
   <data name="lberror.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 20</value>
+    <value>0, 25</value>
   </data>
   <data name="lberror.TabIndex" type="System.Int32, mscorlib">
     <value>49</value>
@@ -310,7 +331,7 @@
     <value>lberror</value>
   </data>
   <data name="&gt;&gt;lberror.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lberror.Parent" xml:space="preserve">
     <value>GroupBox2</value>
@@ -319,10 +340,16 @@
     <value>6</value>
   </data>
   <data name="GroupBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>19, 12</value>
+    <value>25, 15</value>
+  </data>
+  <data name="GroupBox2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="GroupBox2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="GroupBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>842, 83</value>
+    <value>1123, 104</value>
   </data>
   <data name="GroupBox2.TabIndex" type="System.Int32, mscorlib">
     <value>60</value>
@@ -331,7 +358,7 @@
     <value>GroupBox2</value>
   </data>
   <data name="&gt;&gt;GroupBox2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;GroupBox2.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -340,10 +367,16 @@
     <value>0</value>
   </data>
   <data name="griddetdocanula.Location" type="System.Drawing.Point, System.Drawing">
-    <value>25, 278</value>
+    <value>33, 348</value>
+  </data>
+  <data name="griddetdocanula.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="griddetdocanula.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>51</value>
   </data>
   <data name="griddetdocanula.Size" type="System.Drawing.Size, System.Drawing">
-    <value>440, 234</value>
+    <value>587, 292</value>
   </data>
   <data name="griddetdocanula.TabIndex" type="System.Int32, mscorlib">
     <value>58</value>
@@ -352,7 +385,7 @@
     <value>griddetdocanula</value>
   </data>
   <data name="&gt;&gt;griddetdocanula.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;griddetdocanula.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -361,10 +394,16 @@
     <value>1</value>
   </data>
   <data name="griddocanula.Location" type="System.Drawing.Point, System.Drawing">
-    <value>24, 101</value>
+    <value>32, 126</value>
+  </data>
+  <data name="griddocanula.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="griddocanula.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>51</value>
   </data>
   <data name="griddocanula.Size" type="System.Drawing.Size, System.Drawing">
-    <value>441, 168</value>
+    <value>588, 210</value>
   </data>
   <data name="griddocanula.TabIndex" type="System.Int32, mscorlib">
     <value>55</value>
@@ -373,7 +412,7 @@
     <value>griddocanula</value>
   </data>
   <data name="&gt;&gt;griddocanula.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;griddocanula.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -388,10 +427,13 @@
     <value>NoControl</value>
   </data>
   <data name="btneliticket.Location" type="System.Drawing.Point, System.Drawing">
-    <value>471, 115</value>
+    <value>628, 144</value>
+  </data>
+  <data name="btneliticket.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btneliticket.Size" type="System.Drawing.Size, System.Drawing">
-    <value>93, 54</value>
+    <value>124, 68</value>
   </data>
   <data name="btneliticket.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -406,7 +448,7 @@
     <value>btneliticket</value>
   </data>
   <data name="&gt;&gt;btneliticket.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btneliticket.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -421,10 +463,13 @@
     <value>NoControl</value>
   </data>
   <data name="btneliitem.Location" type="System.Drawing.Point, System.Drawing">
-    <value>471, 295</value>
+    <value>628, 369</value>
+  </data>
+  <data name="btneliitem.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btneliitem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btneliitem.TabIndex" type="System.Int32, mscorlib">
     <value>47</value>
@@ -436,7 +481,7 @@
     <value>btneliitem</value>
   </data>
   <data name="&gt;&gt;btneliitem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btneliitem.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -451,10 +496,13 @@
     <value>NoControl</value>
   </data>
   <data name="Button4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>582, 295</value>
+    <value>776, 369</value>
+  </data>
+  <data name="Button4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="Button4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="Button4.TabIndex" type="System.Int32, mscorlib">
     <value>39</value>
@@ -466,7 +514,7 @@
     <value>Button4</value>
   </data>
   <data name="&gt;&gt;Button4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Button4.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -481,10 +529,13 @@
     <value>NoControl</value>
   </data>
   <data name="btnvolver.Location" type="System.Drawing.Point, System.Drawing">
-    <value>778, 458</value>
+    <value>1037, 572</value>
+  </data>
+  <data name="btnvolver.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btnvolver.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btnvolver.TabIndex" type="System.Int32, mscorlib">
     <value>38</value>
@@ -496,7 +547,7 @@
     <value>btnvolver</value>
   </data>
   <data name="&gt;&gt;btnvolver.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btnvolver.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -511,10 +562,13 @@
     <value>NoControl</value>
   </data>
   <data name="Button1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>680, 295</value>
+    <value>907, 369</value>
+  </data>
+  <data name="Button1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="Button1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="Button1.TabIndex" type="System.Int32, mscorlib">
     <value>37</value>
@@ -526,7 +580,7 @@
     <value>Button1</value>
   </data>
   <data name="&gt;&gt;Button1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Button1.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -541,10 +595,13 @@
     <value>NoControl</value>
   </data>
   <data name="btn9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>778, 235</value>
+    <value>1037, 294</value>
+  </data>
+  <data name="btn9.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btn9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btn9.TabIndex" type="System.Int32, mscorlib">
     <value>36</value>
@@ -556,7 +613,7 @@
     <value>btn9</value>
   </data>
   <data name="&gt;&gt;btn9.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btn9.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -571,10 +628,13 @@
     <value>NoControl</value>
   </data>
   <data name="btn8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>680, 235</value>
+    <value>907, 294</value>
+  </data>
+  <data name="btn8.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btn8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btn8.TabIndex" type="System.Int32, mscorlib">
     <value>35</value>
@@ -586,7 +646,7 @@
     <value>btn8</value>
   </data>
   <data name="&gt;&gt;btn8.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btn8.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -601,10 +661,13 @@
     <value>NoControl</value>
   </data>
   <data name="btn7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>582, 235</value>
+    <value>776, 294</value>
+  </data>
+  <data name="btn7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btn7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btn7.TabIndex" type="System.Int32, mscorlib">
     <value>34</value>
@@ -616,7 +679,7 @@
     <value>btn7</value>
   </data>
   <data name="&gt;&gt;btn7.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btn7.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -631,10 +694,13 @@
     <value>NoControl</value>
   </data>
   <data name="btn6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>778, 175</value>
+    <value>1037, 219</value>
+  </data>
+  <data name="btn6.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btn6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btn6.TabIndex" type="System.Int32, mscorlib">
     <value>33</value>
@@ -646,7 +712,7 @@
     <value>btn6</value>
   </data>
   <data name="&gt;&gt;btn6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btn6.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -661,10 +727,13 @@
     <value>NoControl</value>
   </data>
   <data name="btn5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>680, 175</value>
+    <value>907, 219</value>
+  </data>
+  <data name="btn5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btn5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btn5.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>
@@ -676,7 +745,7 @@
     <value>btn5</value>
   </data>
   <data name="&gt;&gt;btn5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btn5.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -691,10 +760,13 @@
     <value>NoControl</value>
   </data>
   <data name="btn4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>582, 175</value>
+    <value>776, 219</value>
+  </data>
+  <data name="btn4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btn4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btn4.TabIndex" type="System.Int32, mscorlib">
     <value>31</value>
@@ -706,7 +778,7 @@
     <value>btn4</value>
   </data>
   <data name="&gt;&gt;btn4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btn4.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -721,10 +793,13 @@
     <value>NoControl</value>
   </data>
   <data name="btn3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>778, 115</value>
+    <value>1037, 144</value>
+  </data>
+  <data name="btn3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btn3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btn3.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
@@ -736,7 +811,7 @@
     <value>btn3</value>
   </data>
   <data name="&gt;&gt;btn3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btn3.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -751,10 +826,13 @@
     <value>NoControl</value>
   </data>
   <data name="btn2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>680, 115</value>
+    <value>907, 144</value>
+  </data>
+  <data name="btn2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btn2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btn2.TabIndex" type="System.Int32, mscorlib">
     <value>29</value>
@@ -766,7 +844,7 @@
     <value>btn2</value>
   </data>
   <data name="&gt;&gt;btn2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btn2.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -781,10 +859,13 @@
     <value>NoControl</value>
   </data>
   <data name="btn1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>582, 115</value>
+    <value>776, 144</value>
+  </data>
+  <data name="btn1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="btn1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 54</value>
+    <value>111, 68</value>
   </data>
   <data name="btn1.TabIndex" type="System.Int32, mscorlib">
     <value>28</value>
@@ -796,7 +877,7 @@
     <value>btn1</value>
   </data>
   <data name="&gt;&gt;btn1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;btn1.Parent" xml:space="preserve">
     <value>GroupBox1</value>
@@ -805,10 +886,16 @@
     <value>16</value>
   </data>
   <data name="GroupBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 12</value>
+    <value>16, 15</value>
+  </data>
+  <data name="GroupBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="GroupBox1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="GroupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>880, 523</value>
+    <value>1173, 654</value>
   </data>
   <data name="GroupBox1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -817,7 +904,7 @@
     <value>GroupBox1</value>
   </data>
   <data name="&gt;&gt;GroupBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;GroupBox1.Parent" xml:space="preserve">
     <value>$this</value>
@@ -825,20 +912,20 @@
   <data name="&gt;&gt;GroupBox1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>9, 20</value>
+    <value>12, 25</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>902, 547</value>
+    <value>1203, 684</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 5, 4, 5</value>
+    <value>5, 6, 5, 6</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
@@ -850,6 +937,6 @@
     <value>AnulaDoc</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

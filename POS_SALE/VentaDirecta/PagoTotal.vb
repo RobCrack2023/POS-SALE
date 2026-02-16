@@ -807,19 +807,19 @@ Public Class PagoTotal
         Dim objconnn As DBCONECTAR1 = New DBCONECTAR1
         Dim tablas As DataTable = New DataTable
 
-        sql = "insert into pos_std.cliente (idcliente,Nombre,telefono1,idsucursal,rut) "
-        sql = sql & "values((select max(b.idcliente)+1 from pos_std.cliente b) ,'Temporal','111111111',11,'11111111'); "
+        sql = "insert into cliente (idcliente,Nombre,telefono1,idsucursal,rut) "
+        sql = sql & "values((select max(b.idcliente)+1 from cliente b) ,'Temporal','111111111',11,'11111111'); "
 
-        sql = sql & "insert into pos_std.pedido_cab (idpedido_cab,id_cliente,numenc,idusuario,fec_ing,hrs_ing,abonado,saldo,total,estado,id_sucursal)"
-        sql = sql & "values( (select max(c.idpedido_cab)+1 from pos_std.pedido_cab c),(select max(idcliente) from pos_std.cliente),0,1,'" & Format(Now(), "yyyy-MM-dd") & "','" & Format(Now(), "hh:mm:ss") & "',CDbl(frmtotal.txtabono.Text) ,CDbl(frmtotal.txtsaldo.Text) ,CDbl(frmtotal.txttotales.Text) ,1," & idsucursalpublic & ");"
+        sql = sql & "insert into pedido_cab (idpedido_cab,id_cliente,numenc,idusuario,fec_ing,hrs_ing,abonado,saldo,total,estado,id_sucursal)"
+        sql = sql & "values( (select max(c.idpedido_cab)+1 from pedido_cab c),(select max(idcliente) from cliente),0,1,'" & Format(Now(), "yyyy-MM-dd") & "','" & Format(Now(), "hh:mm:ss") & "',CDbl(frmtotal.txtabono.Text) ,CDbl(frmtotal.txtsaldo.Text) ,CDbl(frmtotal.txttotales.Text) ,1," & idsucursalpublic & ");"
 
-        sql = sql & "insert into pos_std.pedido_det (idpedido_det,idpedido_cab,id_producto,cantidad,medidas,precio,mensaje) "
-        sql = sql & "values((select max(b.idpedido_det)+1 from pos_std.pedido_det b),(select max(c.idpedido_cab) from pos_std.pedido_cab c),0,0,'',0,'Temporal');"
+        sql = sql & "insert into pedido_det (idpedido_det,idpedido_cab,id_producto,cantidad,medidas,precio,mensaje) "
+        sql = sql & "values((select max(b.idpedido_det)+1 from pedido_det b),(select max(c.idpedido_cab) from pedido_cab c),0,0,'',0,'Temporal');"
 
         Try
             objconnn.ExecutarMySQLInsert(sql)
 
-            sql = "select max(idpedido_cab) as idmax from pos_std.pedido_cab "
+            sql = "select max(idpedido_cab) as idmax from pedido_cab "
             tablas = objconnn.ExecutarMySQLTablas(sql)
             If tablas.Rows.Count > 0 Then
                 idcabpedidopublica = tablas.Rows(0)("idmax")

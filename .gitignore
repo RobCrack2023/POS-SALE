@@ -2,6 +2,12 @@
 nul
 NUL
 
+# SQL dumps (pueden ser muy grandes)
+*.sql
+
+# Scripts de importación locales
+importar_dump.py
+
 # Build results
 [Dd]ebug/
 [Rr]elease/
