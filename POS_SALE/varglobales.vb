@@ -23,6 +23,7 @@ Module varglobales
     Public variossucuselec As String
     Public idborrarventa As Integer
     Public idrutvarios As String
+    Public intervaloSincMin As Integer = 5   ' Intervalo de sync periódico (minutos), se carga desde el backend
 
 
     Function RecuperacionCierres() As Boolean

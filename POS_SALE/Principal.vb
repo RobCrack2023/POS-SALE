@@ -39,19 +39,9 @@ Public Class Principal
 
 
     Private Sub btnupdate_Click(sender As Object, e As EventArgs) Handles btnupdate.Click
-        If VerificaAgente() = True Then
-            VDirecta.ActualizaDatos()
-        End If
-
     End Sub
 
     Private Sub btnactestructura_Click(sender As Object, e As EventArgs) Handles btnactestructura.Click
-
-        If MsgBox("SE ACTUALIZARA LOS DATOS MAESTROS DEL POS", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            If VerificaAgente() = True Then
-                VDirecta.ActualizaEstructura()
-            End If
-        End If
     End Sub
 
     Private Sub btnconf_Click(sender As Object, e As EventArgs) Handles btnconf.Click
@@ -61,42 +51,12 @@ Public Class Principal
         Configuracion.ShowDialog()
 
     End Sub
-    Public Sub ActualizaDatos()
-        Dim proces As New Process()
-
-        proces.StartInfo.FileName = "C:\programacion\SJA.exe"
-        proces.StartInfo.Arguments = "C:\programacion\postoserver.xml -r300"
-        proces.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
-        proces.Start()
-    End Sub
-    Public Function VerificaAgente() As Boolean
-
-        Dim ejecutando As Process() = Process.GetProcessesByName("SJA")
-        Return True
-
-        If ejecutando.Length > 0 Then
-
-            Return False
-        End If
-
-
-    End Function
-
     Public Sub ActualizaEstado()
         Dim deleg As ActEstadoDelegate
         deleg = New ActEstadoDelegate(AddressOf ActEstado)
         deleg.BeginInvoke("parametro1", Nothing, Nothing)
 
     End Sub
-    Public Sub ActualizaEstructura()
-        Dim proces As New Process()
-
-        proces.StartInfo.FileName = "C:\programacion\SJA.exe"
-        proces.StartInfo.Arguments = "C:\programacion\servertopost.xml"
-        proces.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
-        proces.Start()
-    End Sub
-
     Public Delegate Sub ActEstadoDelegate(ByVal parametro1 As String)
 
     Public Sub ActEstado(ByVal parametro1 As String)

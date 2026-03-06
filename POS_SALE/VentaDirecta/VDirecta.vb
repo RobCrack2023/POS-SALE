@@ -12,6 +12,7 @@ Public Class VDirecta
     Dim idz As Integer
     Dim indencargo As Integer
     Public idvtazrecuperacion As Integer
+    Private TimerSinc As System.Timers.Timer
 
 
     Private Sub btncerrar_Click(sender As Object, e As EventArgs) Handles btncerrar.Click
@@ -959,7 +960,11 @@ Public Class VDirecta
         sql = "select max(a.id_vencab) as ids from vta_cab a  where a.id_sucursal=" & idsucursalpublic & " and  date(a.fecha)='" & Format(Now, "yyyy-MM-dd") & "' and  a.estado=1 and  a.id_vtaz =" & idvtazrecuperacion
         tablas = objconnn.ExecutarMySQLTablas(sql)
 
-        idpublicovta = tablas.Rows(0)("ids")
+        If IsDBNull(tablas.Rows(0)("ids")) Then
+            Exit Sub
+        End If
+
+        idpublicovta = CInt(tablas.Rows(0)("ids"))
 
 
         idpedidoventapublic = idpublicovta
@@ -989,7 +994,12 @@ Public Class VDirecta
         sql = sql & " WHERE  date(a.fecha)='" & Format(Now, "yyyy-MM-dd") & "'  and  a.estado = 1 And a.id_vtaz =" & idvtazrecuperacion
 
         tablas = objconnn.ExecutarMySQLTablas(sql)
-        contlineas = tablas.Rows(0)("cotlineas")
+
+        If IsDBNull(tablas.Rows(0)("cotlineas")) Then
+            Exit Sub
+        End If
+
+        contlineas = CInt(tablas.Rows(0)("cotlineas"))
 
         tablas.Reset()
 
@@ -1027,10 +1037,23 @@ Public Class VDirecta
 
         End If
 
+        IniciarTimerSinc()
 
         Me.KeyPreview = True
 
 
+    End Sub
+
+    Private Sub IniciarTimerSinc()
+        intervaloSincMin = ObtenerIntervaloSync(idsucursalpublic)
+        TimerSinc = New System.Timers.Timer(intervaloSincMin * 60 * 1000)
+        TimerSinc.AutoReset = True
+        AddHandler TimerSinc.Elapsed, AddressOf OnTimerSincElapsed
+        TimerSinc.Start()
+    End Sub
+
+    Private Sub OnTimerSincElapsed(sender As Object, e As System.Timers.ElapsedEventArgs)
+        EnviarVentasPeriodica(idz)
     End Sub
 
     Sub RptX()
@@ -1097,6 +1120,10 @@ Public Class VDirecta
             sql = "update vta_z set estado=2,fec_ter='" & Format(Now(), "yyyy-MM-dd") & "',hrs_ter='" & Format(Now(), "HH:mm:ss") & "'  where id_cabz=" & idz
             objconnn.ExecutarMySQLInsert(sql)
 
+            ' Detener timer periódico y hacer envío final completo (vta_z + ventas)
+            If TimerSinc IsNot Nothing Then TimerSinc.Stop()
+            EnviarVentasBackend(idz)
+
             Me.Close()
 
         End If
@@ -1162,38 +1189,6 @@ Public Class VDirecta
 
     End Sub
 
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-
-        ActualizaDatos()
-
-
-    End Sub
-    Public Sub ActualizaDatos()
-        Dim proces As New Process()
-
-        proces.StartInfo.FileName = "C:\programacion\SJA.exe"
-        proces.StartInfo.Arguments = "C:\programacion\possaletoserver.xml -r400"
-        proces.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
-        proces.Start()
-
-
-
-    End Sub
-
-    Public Sub ActualizaEstructura()
-        Dim proces As New Process()
-
-        proces.StartInfo.FileName = "C:\programacion\SJA.exe"
-        proces.StartInfo.Arguments = "C:\programacion\servertopossale.xml"
-        proces.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
-        proces.Start()
-    End Sub
-
-    Private Sub Timer2_Tick(sender As Object, e As EventArgs) Handles Timer2.Tick
-
-        ActualizaEstructura()
-
-    End Sub
 
 
     Private Sub btnBorrarLinea_Click_1(sender As Object, e As EventArgs) Handles btnBorrarLinea.Click
