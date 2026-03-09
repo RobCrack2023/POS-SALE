@@ -159,6 +159,8 @@
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="Asincronica.vb" />
     <Compile Include="DBCONECTAR1.vb" />
+    <Compile Include="CajaService.vb" />
+    <Compile Include="SincCatalogo.vb" />
     <Compile Include="SincVentas.vb" />
     <!-- ========== MÓDULO PANELADMIN - EXCLUIDO TEMPORALMENTE (No migrado a SQLite) ========== -->
     <!--

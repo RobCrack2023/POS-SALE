@@ -216,29 +216,29 @@ Public Class login
             Exit Sub
         End If
 
-        ' obtiene el numero de caja configurado
-        tablas.Reset()
+        ' ── Sincronizar con backend (registro + catálogo) ─────────────
+        ' Se intenta para cualquier perfil. Solo bloquea al cajero si está pendiente.
+        Dim asignacion As String = CajaService.SincronizarAsignacion()
 
-        sql = "select idcaja from config "
-        tablas = objconect.ExecutarMySQLTablas(sql)
-        If tablas.Rows(0)("idcaja") > 0 Then
-
-            idcajapublic = tablas.Rows(0)("idcaja")
-        Else
-            MsgBox("No esta Configurada la Caja")
-            Exit Sub
+        If asignacion = "ok" Then
+            ' Terminal asignada: descargar catálogo completo
+            tablas.Reset()
+            sql = "SELECT idcaja, idsucursal FROM config"
+            tablas = objconect.ExecutarMySQLTablas(sql)
+            idcajapublic = CInt(tablas.Rows(0)("idcaja"))
+            Dim idSucConf As Integer = CInt(tablas.Rows(0)("idsucursal"))
+            If idSucConf > 0 Then
+                SincCatalogo.DescargarCatalogo(idSucConf)
+            End If
+            tablas.Reset()
         End If
 
-        tablas.Reset()
-
-
-        'sql = "SELECT idusuario,nombre,perfil,id_sucursal FROM usuario where activo=1 and  clave=" & txtingreso.Text
-        ' SQLite no usa prefijos de schema como 'pos_sale.'
+        ' ── Autenticar usuario ────────────────────────────────────────
         sql = "Select a.idusuario,a.nombre,a.perfil,a.id_sucursal,b.id_sucursalTalana FROM usuario a left join sucursal b on a.id_sucursal=b.id_sucursal WHERE a.activo=1 And a.clave='" & txtingreso.Text & "'"
         tablas = objconect.ExecutarMySQLTablas(sql)
 
         If tablas.Rows.Count < 1 Then
-            MsgBox("La cuenta no existe informe al administrador")
+            MsgBox("La cuenta no existe. Informe al administrador.")
             txtingreso.ResetText()
             Exit Sub
         End If
@@ -249,6 +249,21 @@ Public Class login
         nombreusr = tablas.Rows(0)("nombre")
         idsucursalpublic = tablas.Rows(0)("id_sucursal")
         idsucursaltalana = IIf(IsDBNull(tablas.Rows(0)("id_sucursalTalana")) = True, 0, tablas.Rows(0)("id_sucursalTalana"))
+
+        ' ── Cajero: verificar que tenga caja asignada ─────────────────
+        If perfil = 5 Then
+            If asignacion = "pendiente" Then
+                MsgBox("Este terminal está pendiente de asignación de caja." & vbCrLf &
+                       "Solicite al administrador que lo active en el sistema.")
+                txtingreso.ResetText()
+                Exit Sub
+            End If
+            If idcajapublic = 0 Then
+                MsgBox("Caja no configurada. Verifique la conexión al servidor.")
+                txtingreso.ResetText()
+                Exit Sub
+            End If
+        End If
         ' ***********************************************************************
 
 

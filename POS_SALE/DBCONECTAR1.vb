@@ -314,9 +314,15 @@ Public Class DBCONECTAR1
     ''' <summary>
     ''' Ejecuta múltiples operaciones en una transacción atómica
     ''' </summary>
-    Public Function EjecutarTransaccion(operaciones As List(Of OperacionSQL)) As Boolean
+    Public Function EjecutarTransaccion(operaciones As List(Of OperacionSQL),
+                                         Optional deshabilitarFK As Boolean = False) As Boolean
         Using conn As New SQLiteConnection(CONNECTION_STRING)
             conn.Open()
+            If deshabilitarFK Then
+                Using pragma As New SQLiteCommand("PRAGMA foreign_keys = OFF", conn)
+                    pragma.ExecuteNonQuery()
+                End Using
+            End If
             Using transaction As SQLiteTransaction = conn.BeginTransaction()
                 Try
                     For Each operacion In operaciones
@@ -339,6 +345,11 @@ Public Class DBCONECTAR1
                     Return False
                 End Try
             End Using
+            If deshabilitarFK Then
+                Using pragma As New SQLiteCommand("PRAGMA foreign_keys = ON", conn)
+                    pragma.ExecuteNonQuery()
+                End Using
+            End If
         End Using
     End Function
 
