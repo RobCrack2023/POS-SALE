@@ -84,14 +84,15 @@ Module SincCatalogo
         ops.Add(Op("DELETE FROM productos"))
         For Each item In CType(data("productos"), JArray)
             ops.Add(Op("INSERT INTO productos " &
-                       "(codarticulo, descripcion, dpto, seccion, unidadmedida, porpeso, descatalogado, pedidoloc) " &
-                       "VALUES (@cod, @desc, @dpto, @sec, @um, @pp, @dc, @pl)",
+                       "(codarticulo, descripcion, dpto, seccion, unidadmedida, medidareferencia, porpeso, descatalogado, pedidoloc) " &
+                       "VALUES (@cod, @desc, @dpto, @sec, @um, @mr, @pp, @dc, @pl)",
                 New Dictionary(Of String, Object) From {
                     {"@cod",  CInt(item("codarticulo"))},
                     {"@desc", NS(item("descripcion"))},
                     {"@dpto", NI(item("dpto"))},
                     {"@sec",  NI(item("seccion"))},
                     {"@um",   NS(item("unidadmedida"))},
+                    {"@mr",   If(item("medidareferencia") Is Nothing OrElse item("medidareferencia").Type = JTokenType.Null, 1, CInt(item("medidareferencia")))},
                     {"@pp",   NS(item("porpeso"))},
                     {"@dc",   If(item("descatalogado") Is Nothing OrElse item("descatalogado").Type = JTokenType.Null, "F", CStr(item("descatalogado")))},
                     {"@pl",   If(item("pedidoloc") Is Nothing OrElse item("pedidoloc").Type = JTokenType.Null, 0, CInt(item("pedidoloc")))}
@@ -112,15 +113,16 @@ Module SincCatalogo
         ' ── ProdVta ──────────────────────────────────────────────────────
         ops.Add(Op("DELETE FROM vta_prodvta"))
         For Each item In CType(data("prodvta"), JArray)
-            ops.Add(Op("INSERT INTO vta_prodvta (id_producto, cod_plu, id_sucursal, id_activo, descuentos, precio) " &
-                       "VALUES (@prod, @plu, @suc, @activo, @desc, @precio)",
+            ops.Add(Op("INSERT INTO vta_prodvta (id_producto, cod_plu, id_sucursal, id_activo, descuentos, precio, id_plibre) " &
+                       "VALUES (@prod, @plu, @suc, @activo, @desc, @precio, @plibre)",
                 New Dictionary(Of String, Object) From {
                     {"@prod",   CInt(item("id_producto"))},
                     {"@plu",    CInt(item("cod_plu"))},
                     {"@suc",    CInt(item("id_sucursal"))},
                     {"@activo", CInt(item("id_activo"))},
                     {"@desc",   CInt(item("descuentos"))},
-                    {"@precio", CDbl(item("precio"))}
+                    {"@precio", CDbl(item("precio"))},
+                    {"@plibre", If(item("id_plibre") Is Nothing OrElse item("id_plibre").Type = JTokenType.Null, 0, CInt(item("id_plibre")))}
                 }))
         Next
 
