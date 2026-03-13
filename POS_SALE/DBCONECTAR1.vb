@@ -77,6 +77,12 @@ Public Class DBCONECTAR1
                 cmd.ExecuteNonQuery()
             End If
 
+            ' --- config: apiurl (agregado en v4) ---
+            If Not ColumnaExiste(conn, "config", "apiurl") Then
+                cmd.CommandText = "ALTER TABLE config ADD COLUMN apiurl TEXT DEFAULT 'http://localhost:8000'"
+                cmd.ExecuteNonQuery()
+            End If
+
             ' --- sucursal: columnas agregadas en v3 ---
             If Not ColumnaExiste(conn, "sucursal", "suc_ab") Then
                 cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN suc_ab TEXT"

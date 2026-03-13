@@ -78,10 +78,10 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>5740DCF87B2CB82CEFE70422DBB24124DCADCB60</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>BC8F031C5F7D24F10B0CD947BCE56AAA25788DC9</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>POS-SALE_3_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>POS-SALE_4_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -440,33 +440,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\licenses.licx" />
-    <EmbeddedResource Include="paneladmin\AdminCatProd.resx">
-      <DependentUpon>AdminCatProd.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\adminproductos.resx">
-      <DependentUpon>adminproductos.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\AtribCompo.resx">
-      <DependentUpon>AtribCompo.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\compo.resx">
-      <DependentUpon>Compo.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\Composicion.resx">
-      <DependentUpon>Composicion.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\FavoritosEmp.resx">
-      <DependentUpon>FavoritosEmp.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\FavoritosPedidos.resx">
-      <DependentUpon>FavoritosPedidos.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\Favoritos.resx">
-      <DependentUpon>Favoritos.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\DptoSeccion.resx">
-      <DependentUpon>DptoSeccion.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="paneladmin\Conf.resx">
       <DependentUpon>Conf.vb</DependentUpon>
     </EmbeddedResource>
@@ -503,17 +476,8 @@
     </EmbeddedResource>
     -->
     <!-- FIN RECURSOS PedidoLocales OMITIDOS -->
-    <EmbeddedResource Include="paneladmin\NuevoProd.resx">
-      <DependentUpon>NuevoProd.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\PreciosNEW.resx">
-      <DependentUpon>PreciosNEW.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Principal.resx">
       <DependentUpon>Principal.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="paneladmin\Productos.resx">
-      <DependentUpon>Productos.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ped_det.rdlc" />
     <EmbeddedResource Include="login.resx">
@@ -589,6 +553,7 @@
     <None Include="POS-SALE_1_TemporaryKey.pfx" />
     <None Include="POS-SALE_2_TemporaryKey.pfx" />
     <None Include="POS-SALE_3_TemporaryKey.pfx" />
+    <None Include="POS-SALE_4_TemporaryKey.pfx" />
     <None Include="POS-SALE_TemporaryKey.pfx" />
     <None Include="Resources\accept.png" />
   </ItemGroup>

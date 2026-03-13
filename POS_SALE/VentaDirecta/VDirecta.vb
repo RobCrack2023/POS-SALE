@@ -1208,7 +1208,134 @@ Public Class VDirecta
     End Sub
 
     Private Sub btnsubtotal_Click(sender As Object, e As EventArgs) Handles btnsubtotal.Click
+        ImprimirUltimaVenta()
+    End Sub
 
+    Sub ImprimirUltimaVenta()
+        Dim objconnn As DBCONECTAR1 = New DBCONECTAR1
+        Dim sql As String
+        Dim tablas As DataTable = New DataTable
+
+        If idz = 0 Then
+            lbestado.Text = "No hay turno activo"
+            Exit Sub
+        End If
+
+        sql = "SELECT id_vencab FROM vta_cab WHERE estado=2 AND id_vtaz=" & idz & " ORDER BY id_vencab DESC LIMIT 1"
+        tablas = objconnn.ExecutarMySQLTablas(sql)
+
+        If tablas.Rows.Count < 1 OrElse IsDBNull(tablas.Rows(0)("id_vencab")) Then
+            lbestado.Text = "No hay ventas finalizadas para reimprimir"
+            Exit Sub
+        End If
+
+        Dim idUltimaVta As Integer = CInt(tablas.Rows(0)("id_vencab"))
+
+        Dim printDoc As New PrintDocument
+        printDoc.PrinterSettings.PrinterName = ObtieneImpresora()
+        printDoc.PrintController = New System.Drawing.Printing.StandardPrintController()
+        AddHandler printDoc.PrintPage, Sub(s, ev) ImpUltimaVenta(s, ev, idUltimaVta)
+        yPos = 0
+        printDoc.Print()
+        printDoc = Nothing
+        yPos = 0
+
+        lbestado.Text = "Reimpresion ticket N° " & idUltimaVta
+    End Sub
+
+    Sub ImpUltimaVenta(ByVal sender As Object, ByVal e As PrintPageEventArgs, idUltimaVta As Integer)
+        Dim prFont As New Font("Tahoma", 8, FontStyle.Regular)
+        Dim prFont1 As New Font("Tahoma", 10, FontStyle.Bold)
+        Dim prFont2 As New Font("Tahoma", 6, FontStyle.Regular)
+        Dim objconnn As DBCONECTAR1 = New DBCONECTAR1
+        Dim sql As String
+        Dim tablas As DataTable = New DataTable
+        Dim ytmp As Integer
+        Dim dif As Integer
+        Dim totalVenta As Integer
+        Dim cambio As Integer
+
+        ' Encabezado
+        e.Graphics.DrawString(FormatDateTime(Now(), DateFormat.ShortDate) & " " & FormatDateTime(Now(), DateFormat.ShortTime), prFont1, Brushes.Black, xPos, yPos)
+        yPos = yPos + 32
+        e.Graphics.DrawString("** REIMPRESION **", prFont1, Brushes.Black, xPos, yPos)
+        yPos = yPos + 32
+        e.Graphics.DrawString("Numero de Ticket : " & idUltimaVta, prFont1, Brushes.Black, xPos, yPos)
+        yPos = yPos + 32
+
+        ' Items desde vta_log
+        sql = "SELECT log_desc FROM vta_log WHERE id_vtacab=" & idUltimaVta
+        tablas = objconnn.ExecutarMySQLTablas(sql)
+
+        For y = 0 To tablas.Rows.Count - 1
+            If Len(tablas.Rows(y)("log_desc")) > 90 Then
+                ytmp = 50
+            End If
+            e.Graphics.DrawString(tablas.Rows(y)("log_desc"), prFont, Brushes.Black, xPos, yPos)
+            yPos = yPos + 32 + ytmp
+            ytmp = 0
+        Next y
+        tablas.Reset()
+
+        ' Total de la venta
+        sql = "SELECT total FROM vta_cab WHERE id_vencab=" & idUltimaVta
+        tablas = objconnn.ExecutarMySQLTablas(sql)
+        If tablas.Rows.Count > 0 AndAlso Not IsDBNull(tablas.Rows(0)("total")) Then
+            totalVenta = CInt(tablas.Rows(0)("total"))
+        End If
+        tablas.Reset()
+
+        ' Diferencia ticket restaurant (in_doc=1)
+        sql = "SELECT SUM(a.monto) AS total, SUM(a.cambio) AS dif FROM vta_pago a " &
+              "INNER JOIN vta_tipopago b ON a.id_tipo=b.id_tipopago " &
+              "WHERE b.in_doc=1 AND a.id_cabvta=" & idUltimaVta
+        tablas = objconnn.ExecutarMySQLTablas(sql)
+        If tablas.Rows.Count > 0 AndAlso Not IsDBNull(tablas.Rows(0)("dif")) Then
+            dif = CInt(tablas.Rows(0)("dif"))
+        End If
+        tablas.Reset()
+
+        e.Graphics.DrawString("SUBTOTAL : " & FormatCurrency(totalVenta, 0, TriState.True, TriState.False, TriState.True), prFont1, Brushes.Black, xPos, yPos)
+        yPos = yPos + 24
+        If dif > 0 Then
+            e.Graphics.DrawString("Dif. Ticket :" & FormatCurrency(dif, 0, TriState.True, TriState.False, TriState.True), prFont, Brushes.Black, xPos, yPos)
+            yPos = yPos + 24
+        End If
+
+        ' Descuentos aplicados
+        sql = "SELECT monto_desc, monto_ant, ((monto_ant-monto_desc)/monto_ant)*100 AS porcentaje, (monto_ant-monto_desc) AS diferencia " &
+              "FROM vta_descuento WHERE id_cabvta=" & idUltimaVta
+        tablas = objconnn.ExecutarMySQLTablas(sql)
+        If tablas.Rows.Count > 0 Then
+            e.Graphics.DrawString("Dscto : % " & CInt(tablas.Rows(0)("porcentaje")) & " " & FormatCurrency(CInt(tablas.Rows(0)("diferencia")), 0, TriState.True, TriState.False, TriState.True), prFont1, Brushes.Black, xPos, yPos)
+            yPos = yPos + 24
+            e.Graphics.DrawString("TOTAL : " & FormatCurrency(CInt(tablas.Rows(0)("monto_desc")), 0, TriState.True, TriState.False, TriState.True), prFont1, Brushes.Black, xPos, yPos)
+            yPos = yPos + 24
+        End If
+        tablas.Reset()
+
+        ' Tipos de pago
+        sql = "SELECT a.rut_varios, b.id_tipopago, b.texto_tipopago, a.monto, a.cambio FROM vta_pago2 a " &
+              "INNER JOIN vta_tipopago b ON a.id_tipo=b.id_tipopago WHERE a.id_cabvta=" & idUltimaVta
+        tablas = objconnn.ExecutarMySQLTablas(sql)
+
+        For y = 0 To tablas.Rows.Count - 1
+            e.Graphics.DrawString(tablas.Rows(y)("texto_tipopago") & " : " & FormatCurrency(CInt(tablas.Rows(y)("monto")), 0, TriState.True, TriState.False, TriState.True), prFont, Brushes.Black, xPos, yPos)
+            If CInt(tablas.Rows(y)("id_tipopago")) = 9 AndAlso Not IsDBNull(tablas.Rows(y)("rut_varios")) Then
+                yPos = yPos + 24
+                e.Graphics.DrawString(tablas.Rows(y)("rut_varios") & " : " & FormatCurrency(CInt(tablas.Rows(y)("monto")), 0, TriState.True, TriState.False, TriState.True), prFont2, Brushes.Black, xPos, yPos)
+            End If
+            If Not IsDBNull(tablas.Rows(y)("cambio")) AndAlso CInt(tablas.Rows(y)("cambio")) > 0 Then
+                cambio = CInt(tablas.Rows(y)("cambio"))
+            End If
+            yPos = yPos + 24
+        Next y
+        tablas.Reset()
+
+        ' Vuelto
+        e.Graphics.DrawString("Su Vuelto : " & FormatCurrency(cambio, 0, TriState.True, TriState.False, TriState.True), prFont, Brushes.Black, xPos, yPos)
+
+        e.HasMorePages = False
     End Sub
 
 End Class

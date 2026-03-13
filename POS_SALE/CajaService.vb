@@ -29,9 +29,7 @@ Module CajaService
     ''' Retorna "offline" si no hay conexión (el POS sigue con config local).
     ''' </summary>
     Public Function SincronizarAsignacion() As String
-        Dim backendUrl As String = ConfigurationManager.AppSettings("BackendUrl")
-        If String.IsNullOrEmpty(backendUrl) Then backendUrl = "http://localhost:8000"
-        backendUrl = backendUrl.TrimEnd("/"c)
+        Dim backendUrl As String = apiurl.TrimEnd("/"c)
 
         Dim hwId As String = GetHardwareId()
 

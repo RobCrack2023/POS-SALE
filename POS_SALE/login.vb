@@ -150,6 +150,17 @@ Public Class login
 
     Private Sub FPOS_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         txtingreso.Select()
+        ' Cargar URL del servidor desde la BD local
+        Try
+            Dim objDb As New DBCONECTAR1
+            Dim tablas As DataTable = objDb.ExecutarMySQLTablas("SELECT apiurl FROM config LIMIT 1")
+            If tablas.Rows.Count > 0 AndAlso Not IsDBNull(tablas.Rows(0)("apiurl")) Then
+                Dim url As String = tablas.Rows(0)("apiurl").ToString().Trim()
+                If url <> "" Then apiurl = url
+            End If
+        Catch
+            ' Sin BD aún — usa el valor por defecto
+        End Try
     End Sub
 
     Private Sub btn0_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btn0.Click

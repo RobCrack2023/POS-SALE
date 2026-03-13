@@ -6,9 +6,7 @@ Imports Newtonsoft.Json.Linq
 Module SincCatalogo
 
     Private Function BackendUrl() As String
-        Dim url = ConfigurationManager.AppSettings("BackendUrl")
-        If String.IsNullOrEmpty(url) Then url = "http://localhost:8000"
-        Return url.TrimEnd("/"c)
+        Return apiurl.TrimEnd("/"c)
     End Function
 
     ''' <summary>

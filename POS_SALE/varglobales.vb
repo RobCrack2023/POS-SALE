@@ -24,6 +24,7 @@ Module varglobales
     Public idborrarventa As Integer
     Public idrutvarios As String
     Public intervaloSincMin As Integer = 5   ' Intervalo de sync periódico (minutos), se carga desde el backend
+    Public apiurl As String = "http://localhost:8000"  ' URL del servidor backend
 
 
     Function RecuperacionCierres() As Boolean
