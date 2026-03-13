@@ -72,6 +72,20 @@ Public Class DBCONECTAR1
                     cmd.ExecuteNonQuery()
                 End If
 
+                ' --- sucursal: columnas agregadas en v3 ---
+                If Not ColumnaExiste(conn, "sucursal", "suc_ab") Then
+                    cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN suc_ab TEXT"
+                    cmd.ExecuteNonQuery()
+                End If
+                If Not ColumnaExiste(conn, "sucursal", "activo_caja") Then
+                    cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN activo_caja INTEGER DEFAULT 1"
+                    cmd.ExecuteNonQuery()
+                End If
+                If Not ColumnaExiste(conn, "sucursal", "id_sucursalTalana") Then
+                    cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN id_sucursalTalana INTEGER"
+                    cmd.ExecuteNonQuery()
+                End If
+
             End Using
         End Using
     End Sub
