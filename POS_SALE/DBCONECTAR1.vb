@@ -47,7 +47,14 @@ Public Class DBCONECTAR1
         If Not File.Exists(DB_PATH) Then
             CrearBDDesdesCero()
         Else
-            AplicarMigraciones()
+            ' Corre migraciones de columnas Y asegura que todas las tablas existan.
+            ' CreateTables/CreateIndexes usan IF NOT EXISTS → seguros en BD existente.
+            Using conn As New SQLiteConnection(CONNECTION_STRING)
+                conn.Open()
+                AplicarMigraciones(conn)
+                CreateTables(conn)
+                CreateIndexes(conn)
+            End Using
         End If
     End Sub
 
@@ -55,38 +62,35 @@ Public Class DBCONECTAR1
     ''' Agrega columnas que faltan en una BD existente (migraciones incrementales).
     ''' Seguro de ejecutar múltiples veces: solo actúa si la columna no existe.
     ''' </summary>
-    Private Shared Sub AplicarMigraciones()
-        Using conn As New SQLiteConnection(CONNECTION_STRING)
-            conn.Open()
-            Using cmd As New SQLiteCommand(conn)
+    Private Shared Sub AplicarMigraciones(conn As SQLiteConnection)
+        Using cmd As New SQLiteCommand(conn)
 
-                ' --- config: idsucursal (agregado en v2) ---
-                If Not ColumnaExiste(conn, "config", "idsucursal") Then
-                    cmd.CommandText = "ALTER TABLE config ADD COLUMN idsucursal INTEGER DEFAULT 0"
-                    cmd.ExecuteNonQuery()
-                End If
+            ' --- config: idsucursal (agregado en v2) ---
+            If Not ColumnaExiste(conn, "config", "idsucursal") Then
+                cmd.CommandText = "ALTER TABLE config ADD COLUMN idsucursal INTEGER DEFAULT 0"
+                cmd.ExecuteNonQuery()
+            End If
 
-                ' --- config: idimprpt (agregado en v2) ---
-                If Not ColumnaExiste(conn, "config", "idimprpt") Then
-                    cmd.CommandText = "ALTER TABLE config ADD COLUMN idimprpt TEXT"
-                    cmd.ExecuteNonQuery()
-                End If
+            ' --- config: idimprpt (agregado en v2) ---
+            If Not ColumnaExiste(conn, "config", "idimprpt") Then
+                cmd.CommandText = "ALTER TABLE config ADD COLUMN idimprpt TEXT"
+                cmd.ExecuteNonQuery()
+            End If
 
-                ' --- sucursal: columnas agregadas en v3 ---
-                If Not ColumnaExiste(conn, "sucursal", "suc_ab") Then
-                    cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN suc_ab TEXT"
-                    cmd.ExecuteNonQuery()
-                End If
-                If Not ColumnaExiste(conn, "sucursal", "activo_caja") Then
-                    cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN activo_caja INTEGER DEFAULT 1"
-                    cmd.ExecuteNonQuery()
-                End If
-                If Not ColumnaExiste(conn, "sucursal", "id_sucursalTalana") Then
-                    cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN id_sucursalTalana INTEGER"
-                    cmd.ExecuteNonQuery()
-                End If
+            ' --- sucursal: columnas agregadas en v3 ---
+            If Not ColumnaExiste(conn, "sucursal", "suc_ab") Then
+                cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN suc_ab TEXT"
+                cmd.ExecuteNonQuery()
+            End If
+            If Not ColumnaExiste(conn, "sucursal", "activo_caja") Then
+                cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN activo_caja INTEGER DEFAULT 1"
+                cmd.ExecuteNonQuery()
+            End If
+            If Not ColumnaExiste(conn, "sucursal", "id_sucursalTalana") Then
+                cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN id_sucursalTalana INTEGER"
+                cmd.ExecuteNonQuery()
+            End If
 
-            End Using
         End Using
     End Sub
 
