@@ -24,6 +24,7 @@ Partial Class ResumenArqueoSinCerrar
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.btnrecupera = New System.Windows.Forms.Button()
+        Me.btndescartar = New System.Windows.Forms.Button()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtidrecup = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -37,6 +38,7 @@ Partial Class ResumenArqueoSinCerrar
         '
         Me.Panel1.BackColor = System.Drawing.Color.Moccasin
         Me.Panel1.Controls.Add(Me.btnrecupera)
+        Me.Panel1.Controls.Add(Me.btndescartar)
         Me.Panel1.Controls.Add(Me.Label3)
         Me.Panel1.Controls.Add(Me.txtidrecup)
         Me.Panel1.Controls.Add(Me.Label2)
@@ -51,12 +53,23 @@ Partial Class ResumenArqueoSinCerrar
         'btnrecupera
         '
         Me.btnrecupera.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnrecupera.Location = New System.Drawing.Point(228, 129)
+        Me.btnrecupera.Location = New System.Drawing.Point(150, 129)
         Me.btnrecupera.Name = "btnrecupera"
         Me.btnrecupera.Size = New System.Drawing.Size(177, 50)
         Me.btnrecupera.TabIndex = 10
-        Me.btnrecupera.Text = "Recuperar Venta"
+        Me.btnrecupera.Text = "Recuperar Turno"
         Me.btnrecupera.UseVisualStyleBackColor = True
+        '
+        'btndescartar
+        '
+        Me.btndescartar.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btndescartar.Location = New System.Drawing.Point(350, 129)
+        Me.btndescartar.Name = "btndescartar"
+        Me.btndescartar.Size = New System.Drawing.Size(177, 50)
+        Me.btndescartar.TabIndex = 11
+        Me.btndescartar.Text = "Turno Nuevo"
+        Me.btndescartar.BackColor = System.Drawing.Color.LightCoral
+        Me.btndescartar.UseVisualStyleBackColor = False
         '
         'Label3
         '
@@ -138,4 +151,5 @@ Partial Class ResumenArqueoSinCerrar
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtfecharecup As System.Windows.Forms.TextBox
     Friend WithEvents btnrecupera As System.Windows.Forms.Button
+    Friend WithEvents btndescartar As System.Windows.Forms.Button
 End Class

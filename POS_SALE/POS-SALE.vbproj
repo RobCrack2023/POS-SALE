@@ -306,28 +306,10 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="varglobales.vb" />
-    <Compile Include="paneladmin\NuevoProd.Designer.vb">
-      <DependentUpon>NuevoProd.vb</DependentUpon>
-    </Compile>
-    <Compile Include="paneladmin\NuevoProd.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="paneladmin\PreciosNEW.Designer.vb">
-      <DependentUpon>PreciosNEW.vb</DependentUpon>
-    </Compile>
-    <Compile Include="paneladmin\PreciosNEW.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Principal.Designer.vb">
       <DependentUpon>Principal.vb</DependentUpon>
     </Compile>
     <Compile Include="Principal.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="paneladmin\Productos.Designer.vb">
-      <DependentUpon>Productos.vb</DependentUpon>
-    </Compile>
-    <Compile Include="paneladmin\Productos.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="login.vb">

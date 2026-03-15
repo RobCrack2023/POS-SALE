@@ -231,18 +231,19 @@ Public Class login
         ' Se intenta para cualquier perfil. Solo bloquea al cajero si está pendiente.
         Dim asignacion As String = CajaService.SincronizarAsignacion()
 
-        If asignacion = "ok" Then
-            ' Terminal asignada: descargar catálogo completo
-            tablas.Reset()
-            sql = "SELECT idcaja, idsucursal FROM config"
-            tablas = objconect.ExecutarMySQLTablas(sql)
+        ' Cargar siempre idcaja/idsucursal desde config local (puede estar guardado de sesiones anteriores)
+        tablas.Reset()
+        sql = "SELECT idcaja, idsucursal FROM config"
+        tablas = objconect.ExecutarMySQLTablas(sql)
+        If tablas.Rows.Count > 0 Then
             idcajapublic = CInt(tablas.Rows(0)("idcaja"))
             Dim idSucConf As Integer = CInt(tablas.Rows(0)("idsucursal"))
-            If idSucConf > 0 Then
+            ' Solo descarga catálogo si el backend respondió ok
+            If asignacion = "ok" AndAlso idSucConf > 0 Then
                 SincCatalogo.DescargarCatalogo(idSucConf)
             End If
-            tablas.Reset()
         End If
+        tablas.Reset()
 
         ' ── Autenticar usuario ────────────────────────────────────────
         sql = "Select a.idusuario,a.nombre,a.perfil,a.id_sucursal,b.id_sucursalTalana FROM usuario a left join sucursal b on a.id_sucursal=b.id_sucursal WHERE a.activo=1 And a.clave='" & txtingreso.Text & "'"
@@ -273,6 +274,28 @@ Public Class login
                 MsgBox("Caja no configurada. Verifique la conexión al servidor.")
                 txtingreso.ResetText()
                 Exit Sub
+            End If
+
+            ' ── Verificar tiempo máximo sin sync exitosa (> 3 días) ───
+            If asignacion <> "ok" Then
+                Dim syncTabla As DataTable = New DataTable
+                syncTabla = objconect.ExecutarMySQLTablas("SELECT ultima_sync FROM config LIMIT 1")
+                Dim bloqueado As Boolean = True
+                If syncTabla.Rows.Count > 0 AndAlso Not IsDBNull(syncTabla.Rows(0)("ultima_sync")) Then
+                    Dim ultimaSync As String = syncTabla.Rows(0)("ultima_sync").ToString()
+                    Dim fechaSync As DateTime
+                    If DateTime.TryParse(ultimaSync, fechaSync) Then
+                        If (DateTime.Now - fechaSync).TotalDays <= 3 Then
+                            bloqueado = False
+                        End If
+                    End If
+                End If
+                If bloqueado Then
+                    MsgBox("No se pudo conectar al servidor y han pasado más de 3 días sin actualización." & vbCrLf &
+                           "Contacte al administrador del sistema.")
+                    txtingreso.ResetText()
+                    Exit Sub
+                End If
             End If
         End If
         ' ***********************************************************************
