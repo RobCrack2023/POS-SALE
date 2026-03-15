@@ -122,7 +122,7 @@ Module SincVentas
     End Sub
 
     ' ─────────────────────────────────────────────────────────────────────────
-    ' Envío completo al cierre Z: vta_z + todas sus vta_cab + vta_det.
+    ' Envío completo al cierre Z: vta_z + todas sus vta_cab + vta_det + arqueo.
     ' ─────────────────────────────────────────────────────────────────────────
     Public Sub EnviarVentasBackend(idz As Integer)
         If idz <= 0 Then Exit Sub
@@ -145,13 +145,53 @@ Module SincVentas
 
             Dim detalles = LeerDetalles(objconnn, idsCab)
             Dim pagos = LeerPagos(objconnn, idsCab)
+            Dim arqueoDet = LeerArqueoDet(objconnn, idz)
+            Dim boleta = LeerBoleta(objconnn, idz)
 
-            EnviarPayload(tablaZ.Rows(0), ventas, detalles, pagos)
+            EnviarPayload(tablaZ.Rows(0), ventas, detalles, pagos, arqueoDet, boleta)
 
         Catch ex As Exception
             LogError("EnviarVentasBackend(idz=" & idz & "): " & ex.Message)
         End Try
     End Sub
+
+    ' ─────────────────────────────────────────────────────────────────────────
+    ' Envío masivo: todos los turnos de la sucursal (para botón Actualizar).
+    ' ─────────────────────────────────────────────────────────────────────────
+    Public Function EnviarTodasLasVentas(Optional idSucursal As Integer = 0) As Integer
+        Dim enviados As Integer = 0
+        Dim idSuc As Integer = If(idSucursal > 0, idSucursal, idsucursalpublic)
+        Try
+            Dim objconnn As New DBCONECTAR1
+            Dim whereClause As String = If(idSuc > 0, " WHERE id_sucursal=" & idSuc, "")
+            Dim tablaZ As DataTable = objconnn.ExecutarMySQLTablas(
+                "SELECT * FROM vta_z" & whereClause & " ORDER BY id_cabz")
+            For Each rowZ As DataRow In tablaZ.Rows
+                Dim idz As Integer = CInt(rowZ("id_cabz"))
+                Try
+                    Dim tablaCab As DataTable = objconnn.ExecutarMySQLTablas(
+                        "SELECT * FROM vta_cab WHERE id_vtaz=" & idz)
+                    Dim ventas As New List(Of Dictionary(Of String, Object))
+                    Dim idsCab As New List(Of String)
+                    For Each row As DataRow In tablaCab.Rows
+                        ventas.Add(BuildVtaCab(row))
+                        idsCab.Add(CInt(row("id_vencab")).ToString())
+                    Next
+                    Dim detalles = LeerDetalles(objconnn, idsCab)
+                    Dim pagos = LeerPagos(objconnn, idsCab)
+                    Dim arqueoDet = LeerArqueoDet(objconnn, idz)
+                    Dim boleta = LeerBoleta(objconnn, idz)
+                    EnviarPayload(rowZ, ventas, detalles, pagos, arqueoDet, boleta)
+                    enviados += 1
+                Catch ex As Exception
+                    LogError("EnviarTodasLasVentas(idz=" & idz & "): " & ex.Message)
+                End Try
+            Next
+        Catch ex As Exception
+            LogError("EnviarTodasLasVentas: " & ex.Message)
+        End Try
+        Return enviados
+    End Function
 
     ' ─────────────────────────────────────────────────────────────────────────
     ' Helpers privados
@@ -203,19 +243,49 @@ Module SincVentas
             "SELECT * FROM vta_pago WHERE id_cabvta IN (" & String.Join(",", idsCab) & ")")
         For Each row As DataRow In tablaPago.Rows
             pagos.Add(New Dictionary(Of String, Object) From {
-                {"id_cabvta", SafeInt(row("id_cabvta"), 0)},
-                {"id_tipo",   SafeInt(row("id_tipo"), 0)},
-                {"monto",     If(IsDBNull(row("monto")), 0.0, CDbl(row("monto")))},
-                {"cambio",    If(IsDBNull(row("cambio")), 0.0, CDbl(row("cambio")))}
+                {"id_cabvta",  SafeInt(row("id_cabvta"), 0)},
+                {"id_tipo",    SafeInt(row("id_tipo"), 0)},
+                {"monto",      If(IsDBNull(row("monto")), 0.0, CDbl(row("monto")))},
+                {"cambio",     If(IsDBNull(row("cambio")), 0.0, CDbl(row("cambio")))},
+                {"rut_varios", If(IsDBNull(row("rut_varios")), Nothing, row("rut_varios").ToString())}
             })
         Next
         Return pagos
     End Function
 
+    Private Function LeerArqueoDet(objconnn As DBCONECTAR1, idz As Integer) As List(Of Dictionary(Of String, Object))
+        Dim result As New List(Of Dictionary(Of String, Object))
+        Dim dt As DataTable = objconnn.ExecutarMySQLTablas(
+            "SELECT id_vtaz, id_tipopago, monto FROM vta_arqueo_det WHERE id_vtaz=" & idz)
+        For Each row As DataRow In dt.Rows
+            result.Add(New Dictionary(Of String, Object) From {
+                {"id_vtaz",     SafeInt(row("id_vtaz"), 0)},
+                {"id_tipopago", SafeInt(row("id_tipopago"), 0)},
+                {"monto",       If(IsDBNull(row("monto")), 0.0, CDbl(row("monto")))}
+            })
+        Next
+        Return result
+    End Function
+
+    Private Function LeerBoleta(objconnn As DBCONECTAR1, idz As Integer) As Dictionary(Of String, Object)
+        Dim dt As DataTable = objconnn.ExecutarMySQLTablas(
+            "SELECT id_vtaz, id_vtacab, numini, numfin FROM vta_boleta WHERE id_vtaz=" & idz & " LIMIT 1")
+        If dt.Rows.Count = 0 Then Return Nothing
+        Dim row As DataRow = dt.Rows(0)
+        Return New Dictionary(Of String, Object) From {
+            {"id_vtaz",   SafeInt(row("id_vtaz"), 0)},
+            {"id_vtacab", SafeInt(row("id_vtacab"), 0)},
+            {"numini",    If(IsDBNull(row("numini")), 0, CInt(row("numini")))},
+            {"numfin",    If(IsDBNull(row("numfin")), 0, CInt(row("numfin")))}
+        }
+    End Function
+
     Private Sub EnviarPayload(rowZ As DataRow,
                                ventas As List(Of Dictionary(Of String, Object)),
                                detalles As List(Of Dictionary(Of String, Object)),
-                               pagos As List(Of Dictionary(Of String, Object)))
+                               pagos As List(Of Dictionary(Of String, Object)),
+                               Optional arqueoDet As List(Of Dictionary(Of String, Object)) = Nothing,
+                               Optional boleta As Dictionary(Of String, Object) = Nothing)
         Dim vtaZ As New Dictionary(Of String, Object) From {
             {"id_cabz",     SafeInt(rowZ("id_cabz"), 0)},
             {"id_sucursal", SafeInt(rowZ("id_sucursal"), 0)},
@@ -229,10 +299,12 @@ Module SincVentas
         }
 
         Dim payload As New Dictionary(Of String, Object) From {
-            {"vta_z",    vtaZ},
-            {"ventas",   ventas},
-            {"detalles", detalles},
-            {"pagos",    pagos}
+            {"vta_z",       vtaZ},
+            {"ventas",      ventas},
+            {"detalles",    detalles},
+            {"pagos",       pagos},
+            {"arqueo_det",  If(arqueoDet IsNot Nothing, arqueoDet, New List(Of Dictionary(Of String, Object))())},
+            {"boleta",      boleta}
         }
 
         Dim json As String = JsonConvert.SerializeObject(payload)

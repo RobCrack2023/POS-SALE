@@ -83,6 +83,105 @@ Public Class DBCONECTAR1
                 cmd.ExecuteNonQuery()
             End If
 
+            ' --- vta_arqueo_det: tabla dinámica de tipos de pago (nuevas instalaciones ya la tienen,
+            '     instalaciones antiguas tenían vta_arqueo con columnas fijas)
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_arqueo_det (
+                id_vtaz     INTEGER NOT NULL,
+                id_tipopago INTEGER NOT NULL,
+                monto       REAL    NOT NULL DEFAULT 0,
+                PRIMARY KEY (id_vtaz, id_tipopago)
+            )"
+            cmd.ExecuteNonQuery()
+
+            ' --- vta_det: eliminar FK constraints que causan error al agregar productos ---
+            ' SQLite no soporta DROP CONSTRAINT, hay que recrear la tabla.
+            ' Detectamos si aún tiene FK revisando el schema en sqlite_master.
+            Dim schemaDet As String = ""
+            Using schCmd As New SQLiteCommand(
+                "SELECT sql FROM sqlite_master WHERE type='table' AND name='vta_det'", conn)
+                Dim r = schCmd.ExecuteScalar()
+                If r IsNot Nothing Then schemaDet = r.ToString()
+            End Using
+            If schemaDet.Contains("REFERENCES") Then
+                cmd.CommandText = "ALTER TABLE vta_det RENAME TO vta_det_old"
+                cmd.ExecuteNonQuery()
+                cmd.CommandText = "CREATE TABLE vta_det (
+                    id_detvta       INTEGER PRIMARY KEY,
+                    id_cabvta       INTEGER,
+                    id_producto     INTEGER,
+                    numunico        INTEGER,
+                    cant            DECIMAL(10,3),
+                    precio_unitario INTEGER,
+                    desc_producto   TEXT
+                )"
+                cmd.ExecuteNonQuery()
+                cmd.CommandText = "INSERT INTO vta_det SELECT id_detvta,id_cabvta,id_producto,numunico,cant,precio_unitario,desc_producto FROM vta_det_old"
+                cmd.ExecuteNonQuery()
+                cmd.CommandText = "DROP TABLE vta_det_old"
+                cmd.ExecuteNonQuery()
+            End If
+
+            ' --- config: ultima_sync (agregado en v5) ---
+            If Not ColumnaExiste(conn, "config", "ultima_sync") Then
+                cmd.CommandText = "ALTER TABLE config ADD COLUMN ultima_sync TEXT"
+                cmd.ExecuteNonQuery()
+            End If
+
+            ' --- vta_pago: eliminar FK + absorber vta_pago2 (rut_varios) ---
+            ' vta_pago2 era un duplicado de vta_pago con una columna extra (rut_varios).
+            ' Consolidamos todo en vta_pago.
+            Dim schemaPago As String = ""
+            Using schCmd As New SQLiteCommand(
+                "SELECT sql FROM sqlite_master WHERE type='table' AND name='vta_pago'", conn)
+                Dim r = schCmd.ExecuteScalar()
+                If r IsNot Nothing Then schemaPago = r.ToString()
+            End Using
+            ' Necesita recrear si: tiene FK, no tiene rut_varios, o aún tiene PK compuesta (sin id_pago)
+            Dim necesitaRecrear As Boolean = schemaPago.Contains("REFERENCES") OrElse
+                                             Not schemaPago.Contains("rut_varios") OrElse
+                                             Not schemaPago.Contains("id_pago")
+            Dim pago2Existe As Boolean = False
+            Using chk As New SQLiteCommand(
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='vta_pago2'", conn)
+                pago2Existe = (CInt(chk.ExecuteScalar()) > 0)
+            End Using
+            If necesitaRecrear Then
+                cmd.CommandText = "ALTER TABLE vta_pago RENAME TO vta_pago_old"
+                cmd.ExecuteNonQuery()
+                cmd.CommandText = "CREATE TABLE vta_pago (
+                    id_pago    INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id_cabvta  INTEGER NOT NULL DEFAULT 0,
+                    id_tipo    INTEGER NOT NULL DEFAULT 0,
+                    monto      REAL    NOT NULL DEFAULT 0,
+                    cambio     INTEGER NOT NULL DEFAULT 0,
+                    rut_varios TEXT
+                )"
+                cmd.ExecuteNonQuery()
+                ' Prioridad: vta_pago2 (tiene rut_varios), luego vta_pago_old para los demás
+                If pago2Existe Then
+                    cmd.CommandText = "INSERT INTO vta_pago (id_cabvta,id_tipo,monto,cambio,rut_varios) " &
+                                      "SELECT id_cabvta,id_tipo,monto,cambio,rut_varios FROM vta_pago2"
+                    cmd.ExecuteNonQuery()
+                End If
+                cmd.CommandText = "INSERT INTO vta_pago (id_cabvta,id_tipo,monto,cambio) " &
+                                  "SELECT id_cabvta,id_tipo,monto,cambio FROM vta_pago_old"
+                cmd.ExecuteNonQuery()
+                cmd.CommandText = "DROP TABLE vta_pago_old"
+                cmd.ExecuteNonQuery()
+                If pago2Existe Then
+                    cmd.CommandText = "DROP TABLE vta_pago2"
+                    cmd.ExecuteNonQuery()
+                End If
+            ElseIf pago2Existe Then
+                ' Ya tiene el esquema correcto, solo absorber vta_pago2 pendiente
+                cmd.CommandText = "INSERT INTO vta_pago (id_cabvta,id_tipo,monto,cambio,rut_varios) " &
+                                  "SELECT id_cabvta,id_tipo,monto,cambio,rut_varios FROM vta_pago2 " &
+                                  "WHERE rut_varios IS NOT NULL"
+                cmd.ExecuteNonQuery()
+                cmd.CommandText = "DROP TABLE vta_pago2"
+                cmd.ExecuteNonQuery()
+            End If
+
             ' --- sucursal: columnas agregadas en v3 ---
             If Not ColumnaExiste(conn, "sucursal", "suc_ab") Then
                 cmd.CommandText = "ALTER TABLE sucursal ADD COLUMN suc_ab TEXT"
@@ -533,9 +632,7 @@ Public Class DBCONECTAR1
                 numunico INTEGER,
                 cant DECIMAL(10,3),
                 precio_unitario INTEGER,
-                desc_producto TEXT,
-                FOREIGN KEY (id_cabvta) REFERENCES vta_cab(id_vencab),
-                FOREIGN KEY (id_producto) REFERENCES productos(codarticulo)
+                desc_producto TEXT
             )"
             cmd.ExecuteNonQuery()
 
@@ -551,15 +648,14 @@ Public Class DBCONECTAR1
             )"
             cmd.ExecuteNonQuery()
 
-            ' Tabla de pagos
+            ' Tabla de pagos (incluye rut_varios para pago tipo "varios"/empleados)
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_pago (
-                id_cabvta INTEGER NOT NULL DEFAULT 0,
-                id_tipo INTEGER NOT NULL DEFAULT 0,
-                monto REAL NOT NULL DEFAULT 0,
-                cambio INTEGER NOT NULL DEFAULT 0,
-                PRIMARY KEY (id_cabvta, id_tipo, monto, cambio),
-                FOREIGN KEY (id_cabvta) REFERENCES vta_cab(id_vencab),
-                FOREIGN KEY (id_tipo) REFERENCES vta_tipopago(id_tipopago)
+                id_pago    INTEGER PRIMARY KEY AUTOINCREMENT,
+                id_cabvta  INTEGER NOT NULL DEFAULT 0,
+                id_tipo    INTEGER NOT NULL DEFAULT 0,
+                monto      REAL    NOT NULL DEFAULT 0,
+                cambio     INTEGER NOT NULL DEFAULT 0,
+                rut_varios TEXT
             )"
             cmd.ExecuteNonQuery()
 
@@ -608,31 +704,15 @@ Public Class DBCONECTAR1
             )"
             cmd.ExecuteNonQuery()
 
-            ' Tabla de arqueos de caja
-            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_arqueo (
-                id_vtaz INTEGER PRIMARY KEY,
-                efectivo INTEGER DEFAULT 0,
-                tdebito INTEGER DEFAULT 0,
-                tcredito INTEGER DEFAULT 0,
-                sodexo INTEGER DEFAULT 0,
-                amipass INTEGER DEFAULT 0,
-                trestaurant INTEGER DEFAULT 0,
-                FOREIGN KEY (id_vtaz) REFERENCES vta_z(id_cabz)
+            ' Tabla de arqueos de caja — dinámica por tipo de pago
+            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_arqueo_det (
+                id_vtaz     INTEGER NOT NULL,
+                id_tipopago INTEGER NOT NULL,
+                monto       REAL    NOT NULL DEFAULT 0,
+                PRIMARY KEY (id_vtaz, id_tipopago)
             )"
             cmd.ExecuteNonQuery()
 
-            ' Tabla de pagos extendida (con rut_varios)
-            cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_pago2 (
-                id_cabvta INTEGER NOT NULL DEFAULT 0,
-                id_tipo INTEGER NOT NULL DEFAULT 0,
-                monto REAL NOT NULL DEFAULT 0,
-                cambio INTEGER NOT NULL DEFAULT 0,
-                rut_varios TEXT,
-                PRIMARY KEY (id_cabvta, id_tipo, monto, cambio),
-                FOREIGN KEY (id_cabvta) REFERENCES vta_cab(id_vencab),
-                FOREIGN KEY (id_tipo) REFERENCES vta_tipopago(id_tipopago)
-            )"
-            cmd.ExecuteNonQuery()
 
             ' Tabla de cuentas contables
             cmd.CommandText = "CREATE TABLE IF NOT EXISTS vta_cuentas (
@@ -988,8 +1068,7 @@ Public Class DBCONECTAR1
             cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_vta_boleta_vtaz ON vta_boleta(id_vtaz)"
             cmd.ExecuteNonQuery()
 
-            cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_vta_pago2_cabvta ON vta_pago2(id_cabvta)"
-            cmd.ExecuteNonQuery()
+
 
             cmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_vta_mov_vtaz ON vta_mov(id_vtaz)"
             cmd.ExecuteNonQuery()

@@ -34,7 +34,7 @@ Module varglobales
         Dim tablas As DataTable = New DataTable
 
         ' comprueba vta_z no cerradas
-        sql = "select id_cabz from vta_z where id_sucursal=" & idsucursalpublic & " and estado=1 and date(fec_ini)='" & Format(Now, "yyyy-MM-dd") & "'"
+        sql = "select id_cabz from vta_z where id_sucursal=" & idsucursalpublic & " and estado=1"
         tablas = objconnn.ExecutarMySQLTablas(sql)
 
         If tablas.Rows.Count > 0 Then

@@ -527,17 +527,11 @@ Public Class PagoTotal
         For y = 0 To grillapago.Rows.Count - 1
 
             If grillapago.Item(0, y).Value = 9 Then
-
-                sql = "insert into vta_pago2 (id_cabvta,id_tipo,monto,cambio,rut_varios) values(" & idpublicovta & "," & grillapago.Item(0, y).Value & "," & grillapago.Item(2, y).Value & "," & Val(grillapago.Item(3, y).Value) & ",'" & idrutvarios & "')"
-                objconnn.ExecutarMySQLInsert(sql)
-                sql = "insert into vta_pago (id_cabvta,id_tipo,monto,cambio) values(" & idpublicovta & "," & grillapago.Item(0, y).Value & "," & grillapago.Item(2, y).Value & "," & Val(grillapago.Item(3, y).Value) & ")"
-                objconnn.ExecutarMySQLInsert(sql)
+                sql = "insert into vta_pago (id_cabvta,id_tipo,monto,cambio,rut_varios) values(" & idpublicovta & "," & grillapago.Item(0, y).Value & "," & grillapago.Item(2, y).Value & "," & Val(grillapago.Item(3, y).Value) & ",'" & idrutvarios & "')"
             Else
                 sql = "insert into vta_pago (id_cabvta,id_tipo,monto,cambio) values(" & idpublicovta & "," & grillapago.Item(0, y).Value & "," & grillapago.Item(2, y).Value & "," & Val(grillapago.Item(3, y).Value) & ")"
-                objconnn.ExecutarMySQLInsert(sql)
-                sql = "insert into vta_pago2 (id_cabvta,id_tipo,monto,cambio) values(" & idpublicovta & "," & grillapago.Item(0, y).Value & "," & grillapago.Item(2, y).Value & "," & Val(grillapago.Item(3, y).Value) & ")"
-                objconnn.ExecutarMySQLInsert(sql)
             End If
+            objconnn.ExecutarMySQLInsert(sql)
 
 
 
@@ -608,7 +602,7 @@ Public Class PagoTotal
         yPos = yPos + 32
 
 
-        e.Graphics.DrawString("Número de Ticket : " & idpublicovta, prFont1, Brushes.Black, xPos, yPos)
+        e.Graphics.DrawString("Ticket N°: " & idpublicovta, prFont2, Brushes.Black, xPos, yPos)
         yPos = yPos + 32
 
 
@@ -686,7 +680,7 @@ Public Class PagoTotal
         ' imprime tipos de pago
         tablas.Reset()
         ' yPos = 0
-        sql = "select a.rut_varios,b.id_tipopago,b.texto_tipopago,a.monto,a.cambio from vta_pago2 a inner join  vta_tipopago b  on a.id_tipo=b.id_tipopago  where a.id_cabvta=" & idpublicovta
+        sql = "select a.rut_varios,b.id_tipopago,b.texto_tipopago,a.monto,a.cambio from vta_pago a inner join  vta_tipopago b  on a.id_tipo=b.id_tipopago  where a.id_cabvta=" & idpublicovta
 
         tablas = objconnn.ExecutarMySQLTablas(sql)
 
@@ -717,9 +711,12 @@ Public Class PagoTotal
         Dim objconnn As DBCONECTAR1 = New DBCONECTAR1
         Dim tablas As DataTable = New DataTable
 
-        sql = "select nombres from personaltalana where rut='" & rut.Trim & "' and activo='true'"
+        sql = "SELECT nombres FROM personaltalana WHERE rut='" & rut.Trim & "' AND activo=1"
         tablas = objconnn.ExecutarMySQLTablas(sql)
-        Return tablas.Rows(0)("nombres")
+        If tablas.Rows.Count > 0 Then
+            Return tablas.Rows(0)("nombres").ToString()
+        End If
+        Return rut.Trim
 
     End Function
     Private Sub btnaceptaclave_Click(sender As Object, e As EventArgs) Handles btnaceptaclave.Click

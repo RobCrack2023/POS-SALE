@@ -1,4 +1,5 @@
 ﻿Imports System.Drawing.Printing
+Imports System.Threading.Tasks
 Public Class VDirecta
     Dim codteclado As String
     Dim lineaboleta As String
@@ -190,10 +191,10 @@ Public Class VDirecta
         fecha = Format(Now(), "dd-MM-yyyy")
         hora = Format(Now(), "HH:mm:ss")
 
-        e.Graphics.DrawString("Cierre Turno " & fecha & " " & hora, prFont1, Brushes.Black, xPos, yPos)
-        yPos = yPos + 32
-        e.Graphics.DrawString("  Usuario: " & nombreusr, prFont1, Brushes.Black, xPos, yPos)
-        yPos = yPos + 32
+        e.Graphics.DrawString("Cierre Turno " & fecha & " " & hora, prFont2, Brushes.Black, xPos, yPos)
+        yPos = yPos + 24
+        e.Graphics.DrawString("Usuario: " & nombreusr, prFont, Brushes.Black, xPos, yPos)
+        yPos = yPos + 20
 
         '  Arqueo de productos
         tablas.Reset()
@@ -215,8 +216,8 @@ Public Class VDirecta
             Exit Sub
         End If
 
-        e.Graphics.DrawString("Arqueo de Productos", prFont1, Brushes.Black, xPos, yPos)
-        yPos = yPos + 32
+        e.Graphics.DrawString("Arqueo de Productos", prFont2, Brushes.Black, xPos, yPos)
+        yPos = yPos + 20
 
         For t = 0 To tablas.Rows.Count - 1
             e.Graphics.DrawString(tablas.Rows(t)("producto"), prFont, Brushes.Black, xPos, yPos)
@@ -239,8 +240,8 @@ Public Class VDirecta
 
 
         tablas = objconnn.ExecutarMySQLTablas(sql)
-        e.Graphics.DrawString("Total x tipo pago", prFont1, Brushes.Black, xPos, yPos)
-        yPos = yPos + 24
+        e.Graphics.DrawString("Total x tipo pago", prFont2, Brushes.Black, xPos, yPos)
+        yPos = yPos + 20
 
         For t = 0 To tablas.Rows.Count - 1
 
@@ -292,8 +293,8 @@ Public Class VDirecta
             MsgBox("No existen ventas para cerrar caja")
             Exit Sub
         End If
-        e.Graphics.DrawString("Total Ventas ", prFont1, Brushes.Black, xPos, yPos)
-        yPos = yPos + 32
+        e.Graphics.DrawString("Total Ventas", prFont2, Brushes.Black, xPos, yPos)
+        yPos = yPos + 20
         e.Graphics.DrawString(FormatCurrency(tablas.Rows(0)("total") + dif, 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos, yPos)
         yPos = yPos + 24
 
@@ -306,8 +307,8 @@ Public Class VDirecta
 
         tablas = objconnn.ExecutarMySQLTablas(sql)
 
-        e.Graphics.DrawString("Ticket Anulados ", prFont1, Brushes.Black, xPos, yPos)
-        yPos = yPos + 24
+        e.Graphics.DrawString("Ticket Anulados", prFont2, Brushes.Black, xPos, yPos)
+        yPos = yPos + 20
 
         For t = 0 To tablas.Rows.Count - 1
 
@@ -321,41 +322,73 @@ Public Class VDirecta
 
 
 
-        ' Total Por Tipo pago Declarado
+        ' Cuadratura: Sistema vs Declarado por tipo de pago
 
-        sql = "SELECT efectivo,tdebito,tcredito,sodexo,amipass,trestaurant FROM vta_arqueo where id_vtaz=" & idz
+        sql = "SELECT t.texto_tipopago, " &
+              "       COALESCE(SUM(p.monto - p.cambio), 0) AS sistema, " &
+              "       COALESCE(d.monto, 0) AS declarado " &
+              "FROM vta_tipopago t " &
+              "LEFT JOIN vta_pago p ON p.id_tipo = t.id_tipopago " &
+              "    AND p.id_cabvta IN (SELECT id_vencab FROM vta_cab WHERE estado=2 AND id_vtaz=" & idz & ") " &
+              "LEFT JOIN vta_arqueo_det d ON d.id_tipopago = t.id_tipopago AND d.id_vtaz=" & idz & " " &
+              "WHERE t.id_activo = 1 " &
+              "GROUP BY t.id_tipopago, t.texto_tipopago, d.monto " &
+              "ORDER BY t.Posicion"
         tablas = objconnn.ExecutarMySQLTablas(sql)
 
         If tablas.Rows.Count > 0 Then
+            e.Graphics.DrawString("--------------------------------", prFont, Brushes.Black, xPos, yPos)
+            yPos = yPos + 20
+            e.Graphics.DrawString("Cuadratura Tipos de Pago", prFont2, Brushes.Black, xPos, yPos)
+            yPos = yPos + 20
 
-            e.Graphics.DrawString("Total x Tipo de Pago Declaradas", prFont1, Brushes.Black, xPos, yPos)
-            yPos = yPos + 24
+            Dim totalSistema As Decimal = 0
+            Dim totalDeclarado As Decimal = 0
 
-            e.Graphics.DrawString("Efectivo ", prFont, Brushes.Black, xPos, yPos)
-            e.Graphics.DrawString(FormatCurrency(tablas.Rows(0)("efectivo"), 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos + 150, yPos)
-            yPos = yPos + 24
-            e.Graphics.DrawString("T.Debito ", prFont, Brushes.Black, xPos, yPos)
-            e.Graphics.DrawString(FormatCurrency(tablas.Rows(0)("tdebito"), 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos + 150, yPos)
-            yPos = yPos + 24
-            e.Graphics.DrawString("T.Credito ", prFont, Brushes.Black, xPos, yPos)
-            e.Graphics.DrawString(FormatCurrency(tablas.Rows(0)("tcredito"), 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos + 150, yPos)
-            yPos = yPos + 24
-            e.Graphics.DrawString("Sodexo ", prFont, Brushes.Black, xPos, yPos)
-            e.Graphics.DrawString(FormatCurrency(tablas.Rows(0)("sodexo"), 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos + 150, yPos)
-            yPos = yPos + 24
-            e.Graphics.DrawString("Amipass ", prFont, Brushes.Black, xPos, yPos)
-            e.Graphics.DrawString(FormatCurrency(tablas.Rows(0)("amipass"), 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos + 150, yPos)
-            yPos = yPos + 24
-            e.Graphics.DrawString("T. Restaurant ", prFont, Brushes.Black, xPos, yPos)
-            e.Graphics.DrawString(FormatCurrency(tablas.Rows(0)("trestaurant"), 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos + 150, yPos)
-            yPos = yPos + 24
+            For Each row As DataRow In tablas.Rows
+                Dim sistema As Decimal = CDec(row("sistema"))
+                Dim declarado As Decimal = CDec(row("declarado"))
+                Dim diferencia As Decimal = declarado - sistema
 
+                e.Graphics.DrawString(row("texto_tipopago").ToString(), prFont2, Brushes.Black, xPos, yPos)
+                yPos = yPos + 18
+                e.Graphics.DrawString("  Sistema:  ", prFont, Brushes.Black, xPos, yPos)
+                e.Graphics.DrawString(FormatCurrency(sistema, 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos + 130, yPos)
+                yPos = yPos + 20
+                e.Graphics.DrawString("  Declarado:", prFont, Brushes.Black, xPos, yPos)
+                e.Graphics.DrawString(FormatCurrency(declarado, 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos + 130, yPos)
+                yPos = yPos + 20
+                If diferencia <> 0 Then
+                    Dim difStr As String = If(diferencia < 0,
+                        "(" & FormatCurrency(Math.Abs(diferencia), 0, TriState.False, TriState.False, TriState.True) & ")",
+                        FormatCurrency(diferencia, 0, TriState.False, TriState.False, TriState.True))
+                    e.Graphics.DrawString("  Dif:      ", prFont, Brushes.Black, xPos, yPos)
+                    e.Graphics.DrawString(difStr, prFont, Brushes.Black, xPos + 130, yPos)
+                    yPos = yPos + 20
+                End If
 
-            e.Graphics.DrawString("Total Ventas Declaradas", prFont1, Brushes.Black, xPos, yPos)
-            yPos = yPos + 24
+                totalSistema += sistema
+                totalDeclarado += declarado
+                yPos = yPos + 4
+            Next
 
-            e.Graphics.DrawString(FormatCurrency(tablas.Rows(0)("efectivo") + tablas.Rows(0)("tdebito") + tablas.Rows(0)("tcredito") + tablas.Rows(0)("sodexo") + tablas.Rows(0)("amipass") + tablas.Rows(0)("trestaurant"), 0, TriState.False, TriState.False, TriState.True), prFont, Brushes.Black, xPos, yPos)
-            yPos = yPos + 24
+            e.Graphics.DrawString("--------------------------------", prFont, Brushes.Black, xPos, yPos)
+            yPos = yPos + 20
+            e.Graphics.DrawString("Total Sistema:  ", prFont2, Brushes.Black, xPos, yPos)
+            e.Graphics.DrawString(FormatCurrency(totalSistema, 0, TriState.False, TriState.False, TriState.True), prFont2, Brushes.Black, xPos + 130, yPos)
+            yPos = yPos + 20
+            e.Graphics.DrawString("Total Declarado:", prFont2, Brushes.Black, xPos, yPos)
+            e.Graphics.DrawString(FormatCurrency(totalDeclarado, 0, TriState.False, TriState.False, TriState.True), prFont2, Brushes.Black, xPos + 130, yPos)
+            yPos = yPos + 20
+            Dim difTotal As Decimal = totalDeclarado - totalSistema
+            If difTotal <> 0 Then
+                Dim difTotalStr As String = If(difTotal < 0,
+                    "(" & FormatCurrency(Math.Abs(difTotal), 0, TriState.False, TriState.False, TriState.True) & ")",
+                    FormatCurrency(difTotal, 0, TriState.False, TriState.False, TriState.True))
+                e.Graphics.DrawString("Diferencia Total:", prFont2, Brushes.Black, xPos, yPos)
+                e.Graphics.DrawString(difTotalStr, prFont2, Brushes.Black, xPos + 130, yPos)
+                yPos = yPos + 24
+            End If
             tablas.Reset()
         End If
 
@@ -951,66 +984,56 @@ Public Class VDirecta
         btnpor.BackColor = Color.DarkKhaki
     End Sub
     Sub RecuperaValores()
-
         Dim objconnn As DBCONECTAR1 = New DBCONECTAR1
         Dim sql As String
         Dim tablas As DataTable = New DataTable
 
-
-        sql = "select max(a.id_vencab) as ids from vta_cab a  where a.id_sucursal=" & idsucursalpublic & " and  date(a.fecha)='" & Format(Now, "yyyy-MM-dd") & "' and  a.estado=1 and  a.id_vtaz =" & idvtazrecuperacion
+        ' Obtener la venta más reciente en estado=1 del turno interrumpido
+        sql = "SELECT MAX(id_vencab) AS ids FROM vta_cab " &
+              "WHERE id_sucursal=" & idsucursalpublic & " AND estado=1 AND id_vtaz=" & idvtazrecuperacion
         tablas = objconnn.ExecutarMySQLTablas(sql)
 
         If IsDBNull(tablas.Rows(0)("ids")) Then
-            Exit Sub
+            Exit Sub   ' Turno sin ventas pendientes — nada que recuperar
         End If
 
         idpublicovta = CInt(tablas.Rows(0)("ids"))
-
-
         idpedidoventapublic = idpublicovta
+
+        ' Anular ventas más antiguas en estado=1 del mismo turno (quedaron abiertas por corte)
+        objconnn.ExecutarMySQLInsert(
+            "UPDATE vta_cab SET estado=3 WHERE estado=1 AND id_vtaz=" & idvtazrecuperacion &
+            " AND id_vencab <> " & idpublicovta)
 
         tablas.Reset()
 
-
-        sql = "SELECT SUM(b.precio_unitario*b.cant) subtotal FROM  vta_cab a "
-        sql = sql & "  INNER JOIN vta_det b ON b.`id_cabvta`=a.`id_vencab` "
-        sql = sql & " WHERE  date(a.fecha)='" & Format(Now, "yyyy-MM-dd") & "'  and  a.estado = 1 And a.id_vtaz =" & idvtazrecuperacion
-
+        ' Subtotal de la venta recuperada
+        sql = "SELECT SUM(b.precio_unitario*b.cant) AS subtotal FROM vta_cab a " &
+              "INNER JOIN vta_det b ON b.id_cabvta=a.id_vencab " &
+              "WHERE a.id_vencab=" & idpublicovta
         tablas = objconnn.ExecutarMySQLTablas(sql)
 
-        If IsDBNull(tablas.Rows(0)("subtotal")) Then
-
-            Exit Sub
-        End If
-
+        If IsDBNull(tablas.Rows(0)("subtotal")) Then Exit Sub
         acumventa = tablas.Rows(0)("subtotal")
-
         lbsubtotal.Text = FormatCurrency(acumventa, 0, TriState.True, TriState.False, TriState.True)
 
         tablas.Reset()
 
-        sql = "SELECT max(b.numunico) cotlineas FROM  vta_cab a "
-        sql = sql & "  INNER JOIN vta_det b ON b.`id_cabvta`=a.`id_vencab` "
-        sql = sql & " WHERE  date(a.fecha)='" & Format(Now, "yyyy-MM-dd") & "'  and  a.estado = 1 And a.id_vtaz =" & idvtazrecuperacion
-
+        ' Contador de líneas
+        sql = "SELECT MAX(numunico) AS cotlineas FROM vta_det WHERE id_cabvta=" & idpublicovta
         tablas = objconnn.ExecutarMySQLTablas(sql)
 
-        If IsDBNull(tablas.Rows(0)("cotlineas")) Then
-            Exit Sub
-        End If
-
+        If IsDBNull(tablas.Rows(0)("cotlineas")) Then Exit Sub
         contlineas = CInt(tablas.Rows(0)("cotlineas"))
 
         tablas.Reset()
 
-        sql = "select a.log_desc from  vta_log a "
-        sql = sql & "inner join vta_cab b on b.id_vencab=a.id_vtacab "
-        sql = sql & "where  date(b.fecha)='" & Format(Now, "yyyy-MM-dd") & "' and   b.estado = 1 And b.id_vtaz = " & idvtazrecuperacion
-
+        ' Log de productos para mostrar en boleta
+        sql = "SELECT log_desc FROM vta_log WHERE id_vtacab=" & idpublicovta
         tablas = objconnn.ExecutarMySQLTablas(sql)
 
         For Each row As DataRow In tablas.Rows
-            lineaboleta = lineaboleta & row.Item(0).ToString
+            lineaboleta = lineaboleta & row.Item(0).ToString()
         Next
         txtboleta.AppendText(lineaboleta)
     End Sub
@@ -1120,9 +1143,10 @@ Public Class VDirecta
             sql = "update vta_z set estado=2,fec_ter='" & Format(Now(), "yyyy-MM-dd") & "',hrs_ter='" & Format(Now(), "HH:mm:ss") & "'  where id_cabz=" & idz
             objconnn.ExecutarMySQLInsert(sql)
 
-            ' Detener timer periódico y hacer envío final completo (vta_z + ventas)
+            ' Detener timer periódico y hacer envío final completo (vta_z + ventas + arqueo)
             If TimerSinc IsNot Nothing Then TimerSinc.Stop()
-            EnviarVentasBackend(idz)
+            Dim idzCierre As Integer = idz
+            Task.Run(Sub() EnviarVentasBackend(idzCierre))
 
             Me.Close()
 
@@ -1260,7 +1284,7 @@ Public Class VDirecta
         yPos = yPos + 32
         e.Graphics.DrawString("** REIMPRESION **", prFont1, Brushes.Black, xPos, yPos)
         yPos = yPos + 32
-        e.Graphics.DrawString("Numero de Ticket : " & idUltimaVta, prFont1, Brushes.Black, xPos, yPos)
+        e.Graphics.DrawString("Ticket N°: " & idUltimaVta, prFont2, Brushes.Black, xPos, yPos)
         yPos = yPos + 32
 
         ' Items desde vta_log
@@ -1315,7 +1339,7 @@ Public Class VDirecta
         tablas.Reset()
 
         ' Tipos de pago
-        sql = "SELECT a.rut_varios, b.id_tipopago, b.texto_tipopago, a.monto, a.cambio FROM vta_pago2 a " &
+        sql = "SELECT a.rut_varios, b.id_tipopago, b.texto_tipopago, a.monto, a.cambio FROM vta_pago a " &
               "INNER JOIN vta_tipopago b ON a.id_tipo=b.id_tipopago WHERE a.id_cabvta=" & idUltimaVta
         tablas = objconnn.ExecutarMySQLTablas(sql)
 

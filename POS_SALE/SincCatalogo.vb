@@ -18,6 +18,7 @@ Module SincCatalogo
             Using client As New HttpClient()
                 client.Timeout = TimeSpan.FromSeconds(60)
                 Dim url = $"{BackendUrl()}/api/v1/sync/{idSucursal}"
+                If idcajapublic > 0 Then url &= "?id_caja=" & idcajapublic.ToString()
                 Dim json = client.GetStringAsync(url).Result
                 Dim data = JObject.Parse(json)
                 AplicarCatalogo(data)
@@ -219,7 +220,23 @@ Module SincCatalogo
                 }))
         Next
 
+        ' ── Personal Talana (para tipo de pago "varios") ─────────────────
+        ops.Add(Op("DELETE FROM personaltalana"))
+        For Each item In CType(data("personal_talana"), JArray)
+            ops.Add(Op("INSERT INTO personaltalana (rut, nombres, id_sucursal, jefe, activo) " &
+                       "VALUES (@rut, @nom, @suc, @jefe, 1)",
+                New Dictionary(Of String, Object) From {
+                    {"@rut",  NS(item("rut"))},
+                    {"@nom",  NS(item("nombres"))},
+                    {"@suc",  NI(item("id_sucursal"))},
+                    {"@jefe", If(item("jefe") Is Nothing OrElse item("jefe").Type = JTokenType.Null, 0, CInt(item("jefe")))}
+                }))
+        Next
+
         db.EjecutarTransaccion(ops, deshabilitarFK:=True)
+
+        ' Registrar fecha/hora de última sync exitosa
+        db.ExecutarMySQLInsert("UPDATE config SET ultima_sync = datetime('now')")
 
         ' Actualizar variable global de intervalo de sync
         If suc("intervalo_sync_min") IsNot Nothing AndAlso suc("intervalo_sync_min").Type <> JTokenType.Null Then

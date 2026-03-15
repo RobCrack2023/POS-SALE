@@ -9,16 +9,26 @@ Public Class Principal
     End Sub
 
     Private Sub btnupdate_Click(sender As Object, e As EventArgs) Handles btnupdate.Click
-        Dim idSuc As Integer = idsucursalpublic
+        ' Leer sucursal desde config del terminal (no del usuario, que puede ser 0)
+        Dim db As New DBCONECTAR1
+        Dim dt As DataTable = db.ExecutarMySQLTablas("SELECT idsucursal FROM config LIMIT 1")
+        Dim idSuc As Integer = 0
+        If dt.Rows.Count > 0 AndAlso Not IsDBNull(dt.Rows(0)("idsucursal")) Then
+            idSuc = CInt(dt.Rows(0)("idsucursal"))
+        End If
+
         If idSuc = 0 Then
-            MsgBox("No hay sucursal configurada. Configure el terminal desde el backend.")
+            MsgBox("No hay sucursal configurada en este terminal. Configure desde el backend.")
             Exit Sub
         End If
-        Dim ok As Boolean = SincCatalogo.DescargarCatalogo(idSuc)
-        If ok Then
-            MsgBox("Catálogo actualizado correctamente.")
+
+        Dim okCatalogo As Boolean = SincCatalogo.DescargarCatalogo(idSuc)
+        Dim enviados As Integer = EnviarTodasLasVentas(idSuc)
+
+        If okCatalogo Then
+            MsgBox("Catálogo actualizado. Turnos enviados al backend: " & enviados & ".")
         Else
-            MsgBox("No se pudo conectar al servidor. Se mantienen los datos locales.")
+            MsgBox("No se pudo actualizar el catálogo. Turnos enviados al backend: " & enviados & ".")
         End If
     End Sub
 
