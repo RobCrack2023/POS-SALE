@@ -555,7 +555,8 @@ Public Class DBCONECTAR1
                 idcaja INTEGER DEFAULT 0,
                 idimpticket TEXT,
                 idimprpt TEXT,
-                sql1 TEXT
+                sql1 TEXT,
+                apiurl TEXT DEFAULT 'http://localhost:8000'
             )"
             cmd.ExecuteNonQuery()
 
