@@ -161,6 +161,45 @@ Public Class login
         Catch
             ' Sin BD aún — usa el valor por defecto
         End Try
+
+        ' Verificar si hay una nueva versión del instalador disponible (background)
+        Dim tVer As New System.Threading.Thread(
+            Sub()
+                Try
+                    Dim verLocal  As String = My.Application.Info.Version.ToString(3)
+                    Dim urlLatest As String = apiurl & "/api/v1/instaladores/sale/latest"
+                    Dim json      As String
+                    Using wc As New System.Net.WebClient()
+                        wc.Encoding = System.Text.Encoding.UTF8
+                        wc.Headers.Add("Accept", "application/json")
+                        json = wc.DownloadString(urlLatest)
+                    End Using
+
+                    Dim mVer As System.Text.RegularExpressions.Match =
+                        System.Text.RegularExpressions.Regex.Match(json, """version""\s*:\s*""([^""]+)""")
+                    If Not mVer.Success Then Exit Sub
+
+                    Dim verServer As New Version(mVer.Groups(1).Value)
+                    If verServer <= New Version(verLocal) Then Exit Sub
+
+                    Dim mNotas As System.Text.RegularExpressions.Match =
+                        System.Text.RegularExpressions.Regex.Match(json, """notas""\s*:\s*""([^""]*?)""")
+                    Dim notas As String = If(mNotas.Success AndAlso mNotas.Groups(1).Value <> "",
+                                             vbCrLf & vbCrLf & "Novedades:" & vbCrLf &
+                                             mNotas.Groups(1).Value.Replace("\n", vbCrLf), "")
+
+                    Dim msg As String = "Hay una nueva versión disponible: v" & mVer.Groups(1).Value &
+                                        " (versión actual: v" & verLocal & ")" & notas &
+                                        vbCrLf & vbCrLf & "Solicite al administrador que instale la actualización."
+                    Me.Invoke(Sub()
+                        MsgBox(msg, MsgBoxStyle.Information, "Nueva versión disponible")
+                    End Sub)
+                Catch ex As Exception
+                    ' Silencioso — no interrumpir el inicio por fallo en chequeo de versión
+                End Try
+            End Sub)
+        tVer.IsBackground = True
+        tVer.Start()
     End Sub
 
     Private Sub btn0_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btn0.Click
