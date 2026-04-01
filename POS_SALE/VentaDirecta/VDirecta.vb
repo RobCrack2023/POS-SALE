@@ -134,14 +134,17 @@ Public Class VDirecta
     End Sub
 
     Sub imprimeX()
-        
         Dim printDoc3 As New PrintDocument
-
         printDoc3.PrinterSettings.PrinterName = ObtieneImpresora()
         printDoc3.PrintController = New System.Drawing.Printing.StandardPrintController()
         AddHandler printDoc3.PrintPage, AddressOf ImpX
-
-        printDoc3.Print()
+        Try
+            printDoc3.Print()
+        Catch ex As Exception
+            MsgBox("Error al imprimir ticket." & vbCrLf &
+                   "Verifique que la impresora '" & ObtieneImpresora() & "' esté conectada y encendida." & vbCrLf &
+                   ex.Message, MsgBoxStyle.Exclamation, "Error de impresión")
+        End Try
         printDoc3 = Nothing
         yPos = 0
     End Sub
@@ -1260,7 +1263,13 @@ Public Class VDirecta
         printDoc.PrintController = New System.Drawing.Printing.StandardPrintController()
         AddHandler printDoc.PrintPage, Sub(s, ev) ImpUltimaVenta(s, ev, idUltimaVta)
         yPos = 0
-        printDoc.Print()
+        Try
+            printDoc.Print()
+        Catch ex As Exception
+            MsgBox("Error al reimprimir ticket." & vbCrLf &
+                   "Verifique que la impresora '" & ObtieneImpresora() & "' esté conectada y encendida." & vbCrLf &
+                   ex.Message, MsgBoxStyle.Exclamation, "Error de impresión")
+        End Try
         printDoc = Nothing
         yPos = 0
 
