@@ -54,7 +54,13 @@ Public Class SelecSucu
             AddHandler printDoc2.PrintPage, AddressOf imp.ImprimeRPTPedidoProductosSeccion
 
 
-            printDoc2.Print()
+            Try
+                printDoc2.Print()
+            Catch ex As Exception
+                MsgBox("Error al imprimir armado de pedidos." & vbCrLf &
+                       "Verifique que la impresora esté conectada y encendida." & vbCrLf &
+                       ex.Message, MsgBoxStyle.Exclamation, "Error de impresión")
+            End Try
             printDoc2 = Nothing
 
         End If
@@ -64,8 +70,13 @@ Public Class SelecSucu
             printDoc2.PrintController = New System.Drawing.Printing.StandardPrintController()
             AddHandler printDoc2.PrintPage, AddressOf imp.ImprimeRPTPickingProductosSeccion
 
-
-            printDoc2.Print()
+            Try
+                printDoc2.Print()
+            Catch ex As Exception
+                MsgBox("Error al imprimir pre-factura de pedidos." & vbCrLf &
+                       "Verifique que la impresora esté conectada y encendida." & vbCrLf &
+                       ex.Message, MsgBoxStyle.Exclamation, "Error de impresión")
+            End Try
             printDoc2 = Nothing
 
         End If

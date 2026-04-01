@@ -139,7 +139,13 @@ Public Class Creditos
         printDoc3.PrintController = New System.Drawing.Printing.StandardPrintController()
         AddHandler printDoc3.PrintPage, AddressOf itemsimp
 
-        printDoc3.Print()
+        Try
+            printDoc3.Print()
+        Catch ex As Exception
+            MsgBox("Error al imprimir reporte de créditos." & vbCrLf &
+                   "Verifique que la impresora esté conectada y encendida." & vbCrLf &
+                   ex.Message, MsgBoxStyle.Exclamation, "Error de impresión")
+        End Try
         printDoc3 = Nothing
 
     End Sub
@@ -150,7 +156,13 @@ Public Class Creditos
         printDoc3.PrintController = New System.Drawing.Printing.StandardPrintController()
         AddHandler printDoc3.PrintPage, AddressOf ItemPago
 
-        printDoc3.Print()
+        Try
+            printDoc3.Print()
+        Catch ex As Exception
+            MsgBox("Error al imprimir comprobante de pago." & vbCrLf &
+                   "Verifique que la impresora esté conectada y encendida." & vbCrLf &
+                   ex.Message, MsgBoxStyle.Exclamation, "Error de impresión")
+        End Try
         printDoc3 = Nothing
         txtpago.ResetText()
     End Sub

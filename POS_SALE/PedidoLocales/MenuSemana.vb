@@ -380,7 +380,13 @@ Public Class MenuSemana
         printDoc2.PrintController = New System.Drawing.Printing.StandardPrintController()
         AddHandler printDoc2.PrintPage, AddressOf imp.ImprimeRPTPedidoProductos
 
-        printDoc2.Print()
+        Try
+            printDoc2.Print()
+        Catch ex As Exception
+            MsgBox("Error al imprimir menú semana." & vbCrLf &
+                   "Verifique que la impresora esté conectada y encendida." & vbCrLf &
+                   ex.Message, MsgBoxStyle.Exclamation, "Error de impresión")
+        End Try
         printDoc2 = Nothing
         idcabpedidopublica = 0
 

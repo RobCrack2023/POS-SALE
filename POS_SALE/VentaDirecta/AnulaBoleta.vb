@@ -141,7 +141,13 @@ Public Class AnulaBoleta
         printDoc3.PrintController = New System.Drawing.Printing.StandardPrintController()
         AddHandler printDoc3.PrintPage, AddressOf ImpAnulacion
 
-        printDoc3.Print()
+        Try
+            printDoc3.Print()
+        Catch ex As Exception
+            MsgBox("Error al imprimir anulación." & vbCrLf &
+                   "Verifique que la impresora esté conectada y encendida." & vbCrLf &
+                   ex.Message, MsgBoxStyle.Exclamation, "Error de impresión")
+        End Try
         printDoc3 = Nothing
         yPos = 0
     End Sub
