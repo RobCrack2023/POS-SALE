@@ -301,6 +301,22 @@ Public Class login
         idsucursalpublic = tablas.Rows(0)("id_sucursal")
         idsucursaltalana = IIf(IsDBNull(tablas.Rows(0)("id_sucursalTalana")) = True, 0, tablas.Rows(0)("id_sucursalTalana"))
 
+        ' ── Verificar impresora configurada ──────────────────────────
+        If Not ImpresoraConfigurada() Then
+            If perfil = 5 Then
+                MsgBox("La impresora de tickets no está configurada o no está instalada." & vbCrLf &
+                       "Pida al administrador que ingrese para configurarla en Panel Admin > Configuración.",
+                       MsgBoxStyle.Exclamation, "Impresora no configurada")
+                txtingreso.ResetText()
+                txtingreso.Select()
+                Exit Sub
+            ElseIf perfil = 1 Then
+                MsgBox("AVISO: La impresora de tickets no está configurada." & vbCrLf &
+                       "Configure la impresora en Panel Admin > Configuración antes de que los cajeros ingresen.",
+                       MsgBoxStyle.Exclamation, "Impresora no configurada")
+            End If
+        End If
+
         ' ── Cajero: verificar que tenga caja asignada ─────────────────
         If perfil = 5 Then
             If asignacion = "pendiente" Then
@@ -386,5 +402,23 @@ Public Class login
         End If
     End Sub
 
+
+    Private Function ImpresoraConfigurada() As Boolean
+        Try
+            Dim objDb As New DBCONECTAR1
+            Dim tablas As DataTable = objDb.ExecutarMySQLTablas("SELECT idimpticket FROM config LIMIT 1")
+            If tablas.Rows.Count < 1 OrElse IsDBNull(tablas.Rows(0)("idimpticket")) Then
+                Return False
+            End If
+            Dim nombre As String = tablas.Rows(0)("idimpticket").ToString().Trim()
+            If nombre = "" Then Return False
+            For Each imp As String In System.Drawing.Printing.PrinterSettings.InstalledPrinters
+                If imp.Equals(nombre, StringComparison.OrdinalIgnoreCase) Then Return True
+            Next
+            Return False
+        Catch
+            Return False
+        End Try
+    End Function
 
 End Class
