@@ -561,25 +561,17 @@ Public Class PagoTotal
     End Function
 
     Sub ImprimeTicket()
-
         Dim printDoc3 As New PrintDocument
         printDoc3.PrinterSettings.PrinterName = VDirecta.ObtieneImpresora
         printDoc3.PrintController = New System.Drawing.Printing.StandardPrintController()
         AddHandler printDoc3.PrintPage, AddressOf itemsimp
-
-        printDoc3.Print()
-
-
-
-
-        'Dim file As System.IO.StreamWriter = System.IO.File.CreateText("C:\temp.txt")
-
-        'file.WriteLine(Chr(27) & Chr(112) & Chr(2) & Chr(0) & Chr(1))
-        'file.Close()
-
-        'Shell("print /d:USB006 C:\temp.txt", AppWinStyle.NormalFocus)
-
-
+        Try
+            printDoc3.Print()
+        Catch ex As Exception
+            MsgBox("Error al imprimir ticket." & vbCrLf &
+                   "Verifique que la impresora '" & VDirecta.ObtieneImpresora & "' esté conectada y encendida." & vbCrLf &
+                   ex.Message, MsgBoxStyle.Exclamation, "Error de impresión")
+        End Try
         printDoc3 = Nothing
         yPos = 0
     End Sub
