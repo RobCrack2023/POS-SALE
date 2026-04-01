@@ -14,9 +14,7 @@ Module SincVentas
 
     Private ReadOnly Property BackendUrl As String
         Get
-            Dim url = System.Configuration.ConfigurationManager.AppSettings("BackendUrl")
-            If String.IsNullOrEmpty(url) Then url = "http://localhost:8000"
-            Return url.TrimEnd("/"c)
+            Return apiurl.TrimEnd("/"c)
         End Get
     End Property
 
